@@ -4,14 +4,22 @@ const foodList = [
     name: "Pancakes",
     image: "https://www.allrecipes.com/thmb/FE0PiuuR0Uh06uVh1c2AsKjRGbc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/21014-Good-old-Fashioned-Pancakes-mfs_002-0e249c95678f446291ebc9408ae64c05.jpg",
     rating: 4.5,
-    ingredients: ["🥞 Flour", "🥛 Milk", "🥚 Eggs", "🍯 Sugar", "🧂 Baking Powder", "🧈 Butter"],
-    method: [
-      "Mix dry ingredients in a bowl.",
-      "Whisk in milk, eggs, and melted butter until smooth.",
-      "Preheat a griddle or pan over medium heat.",
-      "Pour batter and cook until bubbles form.",
-      "Flip and cook until golden brown.",
-      "Serve with syrup or toppings."
+    servings: 1,
+    ingredients: (servings = 1) => [
+      `${servings * 1} cup Flour`,
+      `${servings * 1} cup Milk`,
+      `${servings * 1} Egg`,
+      `${servings * 2} tbsp Sugar`,
+      `${servings * 1} tsp Baking Powder`,
+      `${servings * 2} tbsp Butter`,
+    ],
+    method: (servings = 1) => [
+      `Mix dry ingredients in a bowl.`,
+      `Whisk in ${servings * 1} cup milk, ${servings * 1} egg(s), and melted butter until smooth.`,
+      `Preheat a griddle or pan over medium heat.`,
+      `Pour batter and cook until bubbles form.`,
+      `Flip and cook until golden brown.`,
+      `Serve with syrup or toppings.`,
     ],
     funFact: "🥞 The world's largest pancake was made in 1994 and weighed over 6,600 pounds! That's like flipping a small car! The first pancakes were actually made over 30,000 years ago on hot stones by our ancient ancestors. Talk about a breakfast that stood the test of time! 🏺"
   },
