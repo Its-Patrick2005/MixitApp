@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import FoodData from "../FoodData";
 import { useTheme } from '../theme.jsx';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const placeholderImage = require('../../assets/images/Logo.png');
 
@@ -408,56 +409,59 @@ export const Detailedfoodlist = React.memo(() => {
   }, [filteredFoods, handleFoodPress, theme]);
 
   return (
-    <ScrollView
-      style={{ flex: 1, backgroundColor: theme.primaryBackground }}
-      contentContainerStyle={{
-        paddingHorizontal: 8,
-        paddingTop: "10%",
-        paddingBottom: 30,
-      }}
-      removeClippedSubviews={true}
-      maxToRenderPerBatch={10}
-      windowSize={10}
-      initialNumToRender={6}
-    >
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <Text
-          style={{
-            fontSize: 24,
-            fontWeight: "bold",
-            color: theme.primaryText,
-            textTransform: "capitalize",
-          }}
-        >
+    <View style={{ flex: 1, backgroundColor: theme.primaryBackground }}>
+      {/* Fixed Header */}
+      <View style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        backgroundColor: theme.primaryBackground,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingTop: 48,
+        paddingHorizontal: 16,
+        height: 72,
+        borderBottomWidth: 1,
+        borderBottomColor: theme.borderLight,
+        justifyContent: 'space-between',
+      }}>
+        <TouchableOpacity onPress={handleGoBack} style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Ionicons name="arrow-back" size={24} color={theme.primaryGreen} />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', color: theme.primaryText, textTransform: 'capitalize', marginLeft: 12 }}>
           {mealName}
         </Text>
-        <TouchableOpacity
-          onPress={handleGoBack}
-          style={{ flexDirection: 'row', alignItems: 'center' }}
-        >
-          <AntDesign name="left" size={24} color={theme.primaryGreen} />
-          <Text style={{ fontSize: 18, color: theme.primaryGreen }}>Back</Text>
-        </TouchableOpacity>
       </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-        }}
+      <ScrollView
+        style={{ flex: 1, backgroundColor: theme.primaryBackground, paddingTop: 72 }}
+        contentContainerStyle={{ paddingHorizontal: 8, paddingBottom: 30 }}
+        removeClippedSubviews={true}
+        maxToRenderPerBatch={10}
+        windowSize={10}
+        initialNumToRender={6}
       >
-        {filteredFoods.length > 0 ? (
-          foodCards
-        ) : (
-          <View style={{ flex: 1, alignItems: "center", padding: 20 }}>
-            <Text style={{ fontSize: 16, color: theme.tertiaryText }}>
-              No foods found for {mealName || "this meal"}.
-            </Text>
-          </View>
-        )}
-      </View>
-    </ScrollView>
+        {/* Remove old header row here */}
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+          }}
+        >
+          {filteredFoods.length > 0 ? (
+            foodCards
+          ) : (
+            <View style={{ flex: 1, alignItems: "center", padding: 20 }}>
+              <Text style={{ fontSize: 16, color: theme.tertiaryText }}>
+                No foods found for {mealName || "this meal"}.
+              </Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+    </View>
   );
 });
 Detailedfoodlist.displayName = "Detailedfoodlist";

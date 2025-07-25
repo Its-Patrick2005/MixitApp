@@ -303,455 +303,403 @@ const GroceriesPage = () => {
   };
 
   // --- UI ---
-  // Show the market list view if a recipe is selected and in recipe mode
+  // Always render the GroceryMap modal at the top level
   if (recipeMode && selectedRecipe) {
     return (
+      <>
+        <GroceryMap 
+          visible={mapVisible}
+          onClose={() => setMapVisible(false)}
+          recipeName={selectedRecipe?.name}
+        />
+        <View style={{ flex: 1, backgroundColor: theme.primaryBackground }}>
+          {/* Fixed Back/Map bar at the top with safe area padding */}
+          <View style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 100,
+            backgroundColor: theme.primaryBackground,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingTop: 48, // Safe area
+            paddingHorizontal: 16,
+            height: 72 + 48,
+            borderBottomWidth: 1,
+            borderBottomColor: theme.borderLight,
+          }}>
+            <TouchableOpacity onPress={leaveRecipeMode} style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="arrow-back" size={24} color={theme.primaryGreen} />
+              <Text style={{ color: theme.primaryGreen, fontWeight: 'bold', fontSize: 18, marginLeft: 6 }}>Back to List</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setMapVisible(true)} style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="map" size={22} color={theme.primaryGreen} />
+              <Text style={{ color: theme.primaryGreen, fontWeight: 'bold', fontSize: 16, marginLeft: 4 }}>Map</Text>
+            </TouchableOpacity>
+          </View>
+          <ScrollView style={{ flex: 1, paddingTop: 72 + 48 }} contentContainerStyle={{ paddingBottom: 100 }}>
+            {/* Recipe Image and Title */}
+            <View style={{ alignItems: 'center', marginBottom: 24 }}>
+              <Image source={{ uri: selectedRecipe.image }} style={{ width: 120, height: 120, borderRadius: 20, marginBottom: 12, borderWidth: 2, borderColor: theme.primaryGreen }} />
+              <Text style={{ fontSize: 24, fontWeight: 'bold', color: theme.primaryText, marginBottom: 4 }}>{selectedRecipe.name}</Text>
+              <Text style={{ color: theme.primaryGreen, fontWeight: 'bold', fontSize: 16 }}>⭐ {selectedRecipe.rating}</Text>
+            </View>
+            {/* Unchecked Ingredients */}
+            <View style={{ backgroundColor: theme.cardBackground, borderRadius: 16, padding: 16, marginHorizontal: 8, marginBottom: 24, borderLeftWidth: 4, borderLeftColor: theme.primaryGreen }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme.primaryText, marginBottom: 12 }}>To Buy</Text>
+              {recipeUnchecked && recipeUnchecked.length > 0 ? (
+                recipeUnchecked.map((ingredient, idx) => (
+                  <View key={ingredient + idx} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                    <TouchableOpacity
+                      onPress={() => checkRecipeIngredient(ingredient)}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: 12,
+                        borderWidth: 2,
+                        borderColor: theme.primaryGreen,
+                        backgroundColor: 'transparent',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: 12,
+                      }}
+                    >
+                      {/* Empty circle for unchecked */}
+                    </TouchableOpacity>
+                    <Text style={{ color: theme.primaryText, fontSize: 16 }}>{ingredient}</Text>
+                  </View>
+                ))
+              ) : (
+                <Text style={{ color: theme.tertiaryText }}>All ingredients checked!</Text>
+              )}
+            </View>
+            {/* Checked Ingredients */}
+            {recipeChecked && recipeChecked.length > 0 && (
+              <View style={{ backgroundColor: theme.tertiaryBackground, borderRadius: 16, padding: 16, marginHorizontal: 8, marginBottom: 24, borderLeftWidth: 4, borderLeftColor: theme.primaryGreen }}>
+                <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme.primaryText, marginBottom: 12 }}>Checked</Text>
+                {recipeChecked.map((ingredient, idx) => (
+                  <View key={ingredient + idx} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                    <TouchableOpacity
+                      onPress={() => uncheckRecipeIngredient(ingredient)}
+                      style={{
+                        width: 24,
+                        height: 24,
+                        borderRadius: 12,
+                        borderWidth: 2,
+                        borderColor: theme.primaryGreen,
+                        backgroundColor: theme.primaryGreen,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginRight: 12,
+                      }}
+                    >
+                      <Ionicons name="checkmark" size={16} color="white" />
+                    </TouchableOpacity>
+                    <Text style={{ color: theme.tertiaryText, fontSize: 16, textDecorationLine: 'line-through' }}>{ingredient}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+          </ScrollView>
+        </View>
+      </>
+    );
+  }
+  return (
+    <>
+      <GroceryMap 
+        visible={mapVisible}
+        onClose={() => setMapVisible(false)}
+        recipeName={selectedRecipe?.name}
+      />
       <View style={{ flex: 1, backgroundColor: theme.primaryBackground }}>
-        {/* Removed Navbar */}
-        {/* Fixed Back/Clear button at the very top */}
-        <View style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          backgroundColor: theme.primaryBackground,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          paddingTop: 48, // Safe area/status bar height
-          paddingHorizontal: 16,
-          height: 72 + 48,
-          borderBottomWidth: 1,
-          borderBottomColor: theme.borderLight,
-        }}>
-          <TouchableOpacity onPress={leaveRecipeMode} style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons name="arrow-back" size={24} color={theme.primaryGreen} />
-            <Text style={{ color: theme.primaryGreen, fontWeight: 'bold', fontSize: 16, marginLeft: 6 }}>Back to List</Text>
-          </TouchableOpacity>
+        <Navbar />
+        
+        {/* Header with Add Item button */}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, marginTop: 8, marginBottom: 12 }}>
+          <Text style={{ fontSize: 24, fontWeight: 'bold', color: theme.primaryText }}>My Grocery List</Text>
           <TouchableOpacity
-            onPress={() => setMapVisible(true)}
-            style={{
-              backgroundColor: theme.primaryGreen,
-              paddingHorizontal: 12,
-              paddingVertical: 8,
-              borderRadius: 20,
+            onPress={handleAddGrocery}
+            style={{ 
+              backgroundColor: theme.primaryGreen, 
+              paddingHorizontal: 12, 
+              paddingVertical: 6, 
+              borderRadius: 16,
               flexDirection: 'row',
               alignItems: 'center',
-              shadowColor: theme.shadow,
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.2,
-              shadowRadius: 4,
-              elevation: 4,
             }}
           >
-            <Ionicons name="location" size={18} color="white" />
-            <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 6 }}>Map</Text>
+            <Ionicons name="add" size={16} color="white" />
+            <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 4 }}>Add Item</Text>
           </TouchableOpacity>
         </View>
-        <ScrollView contentContainerStyle={{ paddingTop: 120, paddingBottom: 100 }}>
-          {/* Recipe Card (using MealCard design) */}
-          <View
-            style={{
-              height: 250,
-              position: "relative",
-              overflow: "hidden",
-              borderRadius: 20,
-              marginHorizontal: 20,
-              marginBottom: 24,
-              shadowColor: theme.shadow,
-              shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.3,
-              shadowRadius: 12,
-              elevation: 8,
-            }}
-          >
-            <Image
-              source={{ uri: selectedRecipe.image }}
-              style={{
-                width: "100%",
-                height: "100%",
-                resizeMode: "cover",
-              }}
-            />
-            {/* Gradient overlay for better text readability */}
-            <View
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: "rgba(0, 58, 0, 0.3)",
-              }}
-            />
-            
-            {/* Food name with enhanced styling */}
-            <View style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              padding: 20,
-              paddingBottom: 25,
-            }}>
-              <Text
-                style={{
-                  fontSize: 28,
-                  fontWeight: "bold",
-                  color: "#ffffff",
-                  textShadowColor: "rgba(0, 0, 0, 0.8)",
-                  textShadowOffset: { width: 2, height: 2 },
-                  textShadowRadius: 4,
-                  lineHeight: 32,
-                }}
-              >
-                {selectedRecipe.name}
-              </Text>
-              
-              {/* Rating badge */}
-              <View style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                paddingHorizontal: 12,
-                paddingVertical: 6,
-                borderRadius: 20,
-                alignSelf: 'flex-start',
-                marginTop: 8,
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-                <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.darkGreen, marginRight: 4 }}>
-                  ⭐ {selectedRecipe.rating}
-                </Text>
+
+        <ScrollView
+          style={{ paddingHorizontal: 16, marginTop: 16 }}
+          contentContainerStyle={{ paddingBottom: 150 }}
+        >
+          {/* Market List Cards (if recipes are saved) */}
+          {savedRecipes.length > 0 && (
+            <View style={{ marginBottom: 24 }}>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme.primaryText }}>Market Lists</Text>
               </View>
-            </View>
-
-            {/* Decorative corner accent */}
-            <View style={{
-              position: 'absolute',
-              top: 20,
-              right: 20,
-              width: 60,
-              height: 60,
-              borderRadius: 30,
-              alignItems: 'center',
-              justifyContent: 'center',
-              overflow: 'hidden',
-            }}>
-              <Image
-                source={require("../../assets/images/Asset 4.png")}
-                style={{ width: 40, height: 40, resizeMode: 'contain' }}
-              />
-            </View>
-          </View>
-
-          {/* Ingredients List (checkboxes only) */}
-          <View style={{ marginHorizontal: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme.primaryText, marginBottom: 12 }}>Ingredients</Text>
-            {recipeUnchecked.length === 0 && recipeChecked.length === 0 && (
-              <Text style={{ color: theme.tertiaryText, fontSize: 16, textAlign: 'center', marginVertical: 24 }}>No ingredients found for this recipe.</Text>
-            )}
-            {recipeUnchecked.map((ingredient, idx) => (
-              <TouchableOpacity key={idx} onPress={() => checkRecipeIngredient(ingredient)} style={{ 
-                flexDirection: 'row', 
-                alignItems: 'center', 
-                marginBottom: 12, 
-                backgroundColor: theme.cardBackground, 
-                borderRadius: 12, 
-                padding: 14, 
-                borderWidth: 1, 
-                borderColor: theme.border, 
-                shadowColor: theme.shadow, 
-                shadowOpacity: 0.06, 
-                shadowRadius: 4, 
-                elevation: 2 
-              }}>
-                <Ionicons name="square-outline" size={24} color={theme.primaryGreen} style={{ marginRight: 12 }} />
-                <Text style={{ fontSize: 16, color: theme.primaryText }}>{ingredient}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {/* Checked Section */}
-          {recipeChecked.length > 0 && (
-            <View style={{ marginTop: 32, marginHorizontal: 20 }}>
-              <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.primaryGreen, marginBottom: 8 }}>Checked</Text>
-              {recipeChecked.map((ingredient, idx) => (
-                <TouchableOpacity key={idx} onPress={() => uncheckRecipeIngredient(ingredient)} style={{ 
-                  flexDirection: 'row', 
-                  alignItems: 'center', 
-                  marginBottom: 10, 
-                  backgroundColor: theme.lightGreen, 
-                  borderRadius: 12, 
-                  padding: 14, 
-                  borderWidth: 1, 
-                  borderColor: theme.border, 
-                  shadowColor: theme.shadow, 
-                  shadowOpacity: 0.04, 
-                  shadowRadius: 2, 
-                  elevation: 1 
-                }}>
-                  <Ionicons name="checkbox" size={24} color={theme.primaryGreen} style={{ marginRight: 12 }} />
-                  <Text style={{ fontSize: 16, color: theme.primaryText }}>{ingredient}</Text>
+              {savedRecipes.map((recipe, index) => (
+                <TouchableOpacity
+                  key={recipe.name + index}
+                  onPress={() => enterRecipeMode(recipe)}
+                  onLongPress={() => {
+                    console.log('Long press detected for:', recipe.name);
+                    Alert.alert(
+                      "Delete Market List",
+                      `Are you sure you want to delete "${recipe.name}" from your market lists?`,
+                      [
+                        {
+                          text: "Cancel",
+                          style: "cancel"
+                        },
+                        {
+                          text: "Delete",
+                          style: "destructive",
+                          onPress: () => {
+                            console.log('Deleting recipe:', recipe.name);
+                            clearSavedRecipe(recipe.name);
+                          }
+                        }
+                      ]
+                    );
+                  }}
+                  delayLongPress={500}
+                  activeOpacity={0.7}
+                  style={{
+                    backgroundColor: theme.cardBackground,
+                    borderRadius: 20,
+                    padding: 20,
+                    marginBottom: 16,
+                    shadowColor: theme.shadow,
+                    shadowOpacity: 0.12,
+                    shadowRadius: 12,
+                    shadowOffset: { width: 0, height: 6 },
+                    elevation: 6,
+                    borderWidth: 1,
+                    borderColor: theme.border,
+                  }}
+                >
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Image source={{ uri: recipe.image }} style={{ width: 80, height: 80, borderRadius: 16, marginRight: 16, borderWidth: 2, borderColor: theme.border }} />
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.primaryText, marginBottom: 4 }}>{recipe.name}</Text>
+                      <Text style={{ color: theme.primaryGreen, fontWeight: 'bold', fontSize: 16, marginBottom: 4 }}>⭐ {recipe.rating}</Text>
+                      <Text style={{ color: theme.tertiaryText, fontSize: 14, marginBottom: 4 }}>
+                        {recipe.checked ? recipe.checked.length : 0} checked • {recipe.unchecked ? recipe.unchecked.length : 0} remaining
+                      </Text>
+                      <Text style={{ color: theme.tertiaryText, fontSize: 12 }}>Tap to view market list</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={24} color={theme.primaryGreen} />
+                  </View>
                 </TouchableOpacity>
               ))}
             </View>
           )}
-        </ScrollView>
-      </View>
-    );
-  }
 
-  // --- Normal grocery list UI ---
-  return (
-    <View style={{ flex: 1, backgroundColor: theme.primaryBackground }}>
-      <Navbar />
-      
-      {/* Header with Add Item button */}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, marginTop: 8, marginBottom: 12 }}>
-        <Text style={{ fontSize: 24, fontWeight: 'bold', color: theme.primaryText }}>My Grocery List</Text>
-        <TouchableOpacity
-          onPress={handleAddGrocery}
-          style={{ 
-            backgroundColor: theme.primaryGreen, 
-            paddingHorizontal: 12, 
-            paddingVertical: 6, 
-            borderRadius: 16,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <Ionicons name="add" size={16} color="white" />
-          <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 4 }}>Add Item</Text>
-        </TouchableOpacity>
-      </View>
+          {/* Checked items */}
+          {checkedItems.length > 0 && (
+            <>
+              <Text style={{ fontWeight: '600', color: theme.secondaryText, marginTop: 16, marginBottom: 8 }}>Checked List</Text>
+              {checkedItems.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => uncheckItem(item)}
+                  onLongPress={() =>
+                    setDeleteModal({ visible: true, item, checked: true })
+                  }
+                  style={{ 
+                    flexDirection: 'row', 
+                    justifyContent: 'space-between', 
+                    alignItems: 'center', 
+                    backgroundColor: theme.tertiaryBackground, 
+                    borderRadius: 8, 
+                    padding: 8, 
+                    marginBottom: 8 
+                  }}
+                >
+                  <Text style={{ textDecorationLine: 'line-through', color: theme.tertiaryText }}>{item}</Text>
+                  <Ionicons name="checkmark-done" size={20} color={theme.primaryGreen} />
+                </TouchableOpacity>
+              ))}
+            </>
+          )}
 
-      <ScrollView
-        style={{ paddingHorizontal: 16, marginTop: 16 }}
-        contentContainerStyle={{ paddingBottom: 150 }}
-      >
-        {/* Market List Cards (if recipes are saved) */}
-        {savedRecipes.length > 0 && (
-          <View style={{ marginBottom: 24 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-              <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme.primaryText }}>Market Lists</Text>
-            </View>
-            {savedRecipes.map((recipe, index) => (
-              <TouchableOpacity
-                key={recipe.name + index}
-                onPress={() => enterRecipeMode(recipe)}
-                onLongPress={() => {
-                  console.log('Long press detected for:', recipe.name);
-                  Alert.alert(
-                    "Delete Market List",
-                    `Are you sure you want to delete "${recipe.name}" from your market lists?`,
-                    [
-                      {
-                        text: "Cancel",
-                        style: "cancel"
-                      },
-                      {
-                        text: "Delete",
-                        style: "destructive",
-                        onPress: () => {
-                          console.log('Deleting recipe:', recipe.name);
-                          clearSavedRecipe(recipe.name);
-                        }
-                      }
-                    ]
-                  );
-                }}
-                delayLongPress={500}
-                activeOpacity={0.7}
-                style={{
-                  backgroundColor: theme.cardBackground,
-                  borderRadius: 20,
-                  padding: 20,
-                  marginBottom: 16,
-                  shadowColor: theme.shadow,
-                  shadowOpacity: 0.12,
-                  shadowRadius: 12,
-                  shadowOffset: { width: 0, height: 6 },
-                  elevation: 6,
-                  borderWidth: 1,
-                  borderColor: theme.border,
-                }}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Image source={{ uri: recipe.image }} style={{ width: 80, height: 80, borderRadius: 16, marginRight: 16, borderWidth: 2, borderColor: theme.border }} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.primaryText, marginBottom: 4 }}>{recipe.name}</Text>
-                    <Text style={{ color: theme.primaryGreen, fontWeight: 'bold', fontSize: 16, marginBottom: 4 }}>⭐ {recipe.rating}</Text>
-                    <Text style={{ color: theme.tertiaryText, fontSize: 14, marginBottom: 4 }}>
-                      {recipe.checked ? recipe.checked.length : 0} checked • {recipe.unchecked ? recipe.unchecked.length : 0} remaining
-                    </Text>
-                    <Text style={{ color: theme.tertiaryText, fontSize: 12 }}>Tap to view market list</Text>
-                  </View>
-                  <Ionicons name="chevron-forward" size={24} color={theme.primaryGreen} />
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-
-        {/* Checked items */}
-        {checkedItems.length > 0 && (
-          <>
-            <Text style={{ fontWeight: '600', color: theme.secondaryText, marginTop: 16, marginBottom: 8 }}>Checked List</Text>
-            {checkedItems.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => uncheckItem(item)}
-                onLongPress={() =>
-                  setDeleteModal({ visible: true, item, checked: true })
-                }
+          {/* Inline input box */}
+          {inputVisible && (
+            <View style={{ marginTop: 16 }}>
+              <TextInput
+                placeholder="Enter grocery item"
+                value={inputValue}
+                onChangeText={setInputValue}
                 style={{ 
-                  flexDirection: 'row', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center', 
-                  backgroundColor: theme.tertiaryBackground, 
+                  borderWidth: 1, 
+                  borderColor: theme.borderLight, 
                   borderRadius: 8, 
-                  padding: 8, 
-                  marginBottom: 8 
+                  paddingHorizontal: 8, 
+                  paddingVertical: 4, 
+                  marginBottom: 8, 
+                  backgroundColor: theme.inputBackground,
+                  color: theme.primaryText,
                 }}
-              >
-                <Text style={{ textDecorationLine: 'line-through', color: theme.tertiaryText }}>{item}</Text>
-                <Ionicons name="checkmark-done" size={20} color={theme.primaryGreen} />
-              </TouchableOpacity>
-            ))}
-          </>
-        )}
+                placeholderTextColor={theme.inputPlaceholder}
+              />
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 16, gap: 16 }}>
+                <TouchableOpacity onPress={() => setInputVisible(false)}>
+                  <Text style={{ color: theme.error }}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={addItem}>
+                  <Text style={{ color: theme.primaryGreen, fontWeight: 'bold' }}>Add</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        </ScrollView>
 
-        {/* Inline input box */}
-        {inputVisible && (
-          <View style={{ marginTop: 16 }}>
-            <TextInput
-              placeholder="Enter grocery item"
-              value={inputValue}
-              onChangeText={setInputValue}
-              style={{ 
-                borderWidth: 1, 
-                borderColor: theme.borderLight, 
-                borderRadius: 8, 
-                paddingHorizontal: 8, 
-                paddingVertical: 4, 
-                marginBottom: 8, 
-                backgroundColor: theme.inputBackground,
-                color: theme.primaryText,
-              }}
-              placeholderTextColor={theme.inputPlaceholder}
-            />
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginHorizontal: 16, gap: 16 }}>
-              <TouchableOpacity onPress={() => setInputVisible(false)}>
-                <Text style={{ color: theme.error }}>Cancel</Text>
+        {/* Delete confirm modal */}
+        <Modal
+          transparent
+          visible={deleteModal.visible}
+          animationType="fade"
+          onRequestClose={() => setDeleteModal({ visible: false, item: null, checked: false })}
+        >
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <View style={{ backgroundColor: theme.modalBackground, borderRadius: 8, padding: 16, width: '75%' }}>
+              <Text style={{ marginBottom: 16, textAlign: 'center', color: theme.primaryText }}>Clear "{deleteModal.item}"?</Text>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
+                <TouchableOpacity
+                  onPress={() => setDeleteModal({ visible: false, item: null, checked: false })}
+                  style={{ padding: 8 }}
+                >
+                  <Text style={{ color: theme.secondaryText }}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={clearItem} style={{ padding: 8 }}>
+                  <Text style={{ color: theme.error, fontWeight: 'bold' }}>Clear</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Source selection modal */}
+        <Modal visible={sourceModalVisible} transparent animationType="fade">
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ backgroundColor: theme.modalBackground, borderRadius: 20, padding: 24, width: '85%', alignItems: 'center', shadowColor: theme.shadow, shadowOpacity: 0.2, shadowRadius: 10, elevation: 10 }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 24, color: theme.primaryText }}>Add Grocery Item</Text>
+              <TouchableOpacity style={{ alignItems: 'center', marginBottom: 20, width: '100%' }} onPress={() => { setSourceModalVisible(false); setCookbookModalVisible(true); }}>
+                <Ionicons name="book" size={32} color={theme.primaryGreen} />
+                <Text style={{ color: theme.primaryText, fontWeight: 'bold', marginTop: 8, fontSize: 16 }}>Add from Cookbooks</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={addItem}>
-                <Text style={{ color: theme.primaryGreen, fontWeight: 'bold' }}>Add</Text>
+              <TouchableOpacity style={{ alignItems: 'center', width: '100%' }} onPress={() => { setSourceModalVisible(false); setMealPlanModalVisible(true); }}>
+                <Ionicons name="calendar" size={32} color={theme.primaryGreen} />
+                <Text style={{ color: theme.primaryText, fontWeight: 'bold', marginTop: 8, fontSize: 16 }}>Add from Meal Plan</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setSourceModalVisible(false)} style={{ marginTop: 24 }}>
+                <Text style={{ color: theme.tertiaryText, fontSize: 16 }}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
-        )}
-      </ScrollView>
+        </Modal>
 
-      {/* Delete confirm modal */}
-      <Modal
-        transparent
-        visible={deleteModal.visible}
-        animationType="fade"
-        onRequestClose={() => setDeleteModal({ visible: false, item: null, checked: false })}
-      >
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <View style={{ backgroundColor: theme.modalBackground, borderRadius: 8, padding: 16, width: '75%' }}>
-            <Text style={{ marginBottom: 16, textAlign: 'center', color: theme.primaryText }}>Clear "{deleteModal.item}"?</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 8 }}>
-              <TouchableOpacity
-                onPress={() => setDeleteModal({ visible: false, item: null, checked: false })}
-                style={{ padding: 8 }}
-              >
-                <Text style={{ color: theme.secondaryText }}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={clearItem} style={{ padding: 8 }}>
-                <Text style={{ color: theme.error, fontWeight: 'bold' }}>Clear</Text>
+        {/* Cookbook selection modal */}
+        <Modal visible={cookbookModalVisible} transparent animationType="fade">
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ backgroundColor: theme.modalBackground, borderRadius: 20, padding: 24, width: '85%', alignItems: 'center', shadowColor: theme.shadow, shadowOpacity: 0.2, shadowRadius: 10, elevation: 10 }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 24, color: theme.primaryText }}>Select Cookbook</Text>
+              <ScrollView style={{ width: '100%', maxHeight: 300 }}>
+                {cookbooks.length === 0 ? (
+                  <Text style={{ color: theme.tertiaryText, textAlign: 'center', marginVertical: 20 }}>No cookbooks found.</Text>
+                ) : (
+                  cookbooks.map((cb, idx) => (
+                    <TouchableOpacity
+                      key={cb.title}
+                      onPress={() => handleSelectCookbook(cb)}
+                      style={{ 
+                        padding: 16, 
+                        borderRadius: 10, 
+                        backgroundColor: selectedCookbook && selectedCookbook.title === cb.title ? theme.lightGreen : theme.tertiaryBackground, 
+                        marginBottom: 10, 
+                        borderWidth: 1, 
+                        borderColor: theme.primaryGreen, 
+                        flexDirection: 'row', 
+                        alignItems: 'center' 
+                      }}
+                    >
+                      <Ionicons name="book" size={22} color={theme.primaryGreen} />
+                      <Text style={{ marginLeft: 12, color: theme.primaryText, fontWeight: 'bold', fontSize: 16 }}>{cb.title}</Text>
+                      <Text style={{ marginLeft: 8, color: theme.primaryGreen, fontSize: 14 }}>{cb.recipes.length} recipes</Text>
+                    </TouchableOpacity>
+                  ))
+                )}
+              </ScrollView>
+              <TouchableOpacity onPress={() => setCookbookModalVisible(false)} style={{ marginTop: 16 }}>
+                <Text style={{ color: theme.tertiaryText, fontSize: 16 }}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Source selection modal */}
-      <Modal visible={sourceModalVisible} transparent animationType="fade">
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ backgroundColor: theme.modalBackground, borderRadius: 20, padding: 24, width: '85%', alignItems: 'center', shadowColor: theme.shadow, shadowOpacity: 0.2, shadowRadius: 10, elevation: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 24, color: theme.primaryText }}>Add Grocery Item</Text>
-            <TouchableOpacity style={{ alignItems: 'center', marginBottom: 20, width: '100%' }} onPress={() => { setSourceModalVisible(false); setCookbookModalVisible(true); }}>
-              <Ionicons name="book" size={32} color={theme.primaryGreen} />
-              <Text style={{ color: theme.primaryText, fontWeight: 'bold', marginTop: 8, fontSize: 16 }}>Add from Cookbooks</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ alignItems: 'center', width: '100%' }} onPress={() => { setSourceModalVisible(false); setMealPlanModalVisible(true); }}>
-              <Ionicons name="calendar" size={32} color={theme.primaryGreen} />
-              <Text style={{ color: theme.primaryText, fontWeight: 'bold', marginTop: 8, fontSize: 16 }}>Add from Meal Plan</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setSourceModalVisible(false)} style={{ marginTop: 24 }}>
-              <Text style={{ color: theme.tertiaryText, fontSize: 16 }}>Cancel</Text>
-            </TouchableOpacity>
+        {/* Cookbook recipes modal */}
+        <Modal visible={cookbookRecipesModalVisible} transparent animationType="fade">
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ backgroundColor: theme.modalBackground, borderRadius: 20, padding: 24, width: '85%', alignItems: 'center', shadowColor: theme.shadow, shadowOpacity: 0.2, shadowRadius: 10, elevation: 10 }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 24, color: theme.primaryText }}>Select Recipe</Text>
+              <ScrollView style={{ width: '100%', maxHeight: 300 }}>
+                {selectedCookbook && selectedCookbook.recipes.length === 0 ? (
+                  <Text style={{ color: theme.tertiaryText, textAlign: 'center', marginVertical: 20 }}>No recipes found in this cookbook.</Text>
+                ) : (
+                  selectedCookbook && selectedCookbook.recipes.map((recipe, idx) => {
+                    // Find full recipe details from foodList
+                    const fullRecipe = foodList.find(f => f.name === recipe.name) || recipe;
+                    return (
+                      <TouchableOpacity
+                        key={recipe.name + idx}
+                        onPress={() => handleSelectCookbookRecipe(fullRecipe)}
+                        style={{ 
+                          padding: 16, 
+                          borderRadius: 10, 
+                          backgroundColor: theme.tertiaryBackground, 
+                          marginBottom: 10, 
+                          borderWidth: 1, 
+                          borderColor: theme.primaryGreen, 
+                          flexDirection: 'row', 
+                          alignItems: 'center' 
+                        }}
+                      >
+                        <Image source={{ uri: fullRecipe.image }} style={{ width: 40, height: 40, borderRadius: 8, marginRight: 12 }} />
+                        <Text style={{ color: theme.primaryText, fontWeight: 'bold', fontSize: 16 }}>{fullRecipe.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })
+                )}
+              </ScrollView>
+              <TouchableOpacity onPress={() => setCookbookRecipesModalVisible(false)} style={{ marginTop: 16 }}>
+                <Text style={{ color: theme.tertiaryText, fontSize: 16 }}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Cookbook selection modal */}
-      <Modal visible={cookbookModalVisible} transparent animationType="fade">
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ backgroundColor: theme.modalBackground, borderRadius: 20, padding: 24, width: '85%', alignItems: 'center', shadowColor: theme.shadow, shadowOpacity: 0.2, shadowRadius: 10, elevation: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 24, color: theme.primaryText }}>Select Cookbook</Text>
-            <ScrollView style={{ width: '100%', maxHeight: 300 }}>
-              {cookbooks.length === 0 ? (
-                <Text style={{ color: theme.tertiaryText, textAlign: 'center', marginVertical: 20 }}>No cookbooks found.</Text>
-              ) : (
-                cookbooks.map((cb, idx) => (
-                  <TouchableOpacity
-                    key={cb.title}
-                    onPress={() => handleSelectCookbook(cb)}
-                    style={{ 
-                      padding: 16, 
-                      borderRadius: 10, 
-                      backgroundColor: selectedCookbook && selectedCookbook.title === cb.title ? theme.lightGreen : theme.tertiaryBackground, 
-                      marginBottom: 10, 
-                      borderWidth: 1, 
-                      borderColor: theme.primaryGreen, 
-                      flexDirection: 'row', 
-                      alignItems: 'center' 
-                    }}
-                  >
-                    <Ionicons name="book" size={22} color={theme.primaryGreen} />
-                    <Text style={{ marginLeft: 12, color: theme.primaryText, fontWeight: 'bold', fontSize: 16 }}>{cb.title}</Text>
-                    <Text style={{ marginLeft: 8, color: theme.primaryGreen, fontSize: 14 }}>{cb.recipes.length} recipes</Text>
-                  </TouchableOpacity>
-                ))
-              )}
-            </ScrollView>
-            <TouchableOpacity onPress={() => setCookbookModalVisible(false)} style={{ marginTop: 16 }}>
-              <Text style={{ color: theme.tertiaryText, fontSize: 16 }}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Cookbook recipes modal */}
-      <Modal visible={cookbookRecipesModalVisible} transparent animationType="fade">
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ backgroundColor: theme.modalBackground, borderRadius: 20, padding: 24, width: '85%', alignItems: 'center', shadowColor: theme.shadow, shadowOpacity: 0.2, shadowRadius: 10, elevation: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 24, color: theme.primaryText }}>Select Recipe</Text>
-            <ScrollView style={{ width: '100%', maxHeight: 300 }}>
-              {selectedCookbook && selectedCookbook.recipes.length === 0 ? (
-                <Text style={{ color: theme.tertiaryText, textAlign: 'center', marginVertical: 20 }}>No recipes found in this cookbook.</Text>
-              ) : (
-                selectedCookbook && selectedCookbook.recipes.map((recipe, idx) => {
-                  // Find full recipe details from foodList
-                  const fullRecipe = foodList.find(f => f.name === recipe.name) || recipe;
-                  return (
+        {/* Meal plan recipes modal */}
+        <Modal visible={mealPlanModalVisible} transparent animationType="fade">
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center' }}>
+            <View style={{ backgroundColor: theme.modalBackground, borderRadius: 20, padding: 24, width: '85%', alignItems: 'center', shadowColor: theme.shadow, shadowOpacity: 0.2, shadowRadius: 10, elevation: 10 }}>
+              <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 24, color: theme.primaryText }}>Select from Meal Plan</Text>
+              <ScrollView style={{ width: '100%', maxHeight: 300 }}>
+                {getAllMealPlanRecipes().length === 0 ? (
+                  <Text style={{ color: theme.tertiaryText, textAlign: 'center', marginVertical: 20 }}>No recipes found in meal plan.</Text>
+                ) : (
+                  getAllMealPlanRecipes().map((recipe, idx) => (
                     <TouchableOpacity
                       key={recipe.name + idx}
-                      onPress={() => handleSelectCookbookRecipe(fullRecipe)}
+                      onPress={() => handleSelectMealPlanRecipe(recipe)}
                       style={{ 
                         padding: 16, 
                         borderRadius: 10, 
@@ -763,59 +711,22 @@ const GroceriesPage = () => {
                         alignItems: 'center' 
                       }}
                     >
-                      <Image source={{ uri: fullRecipe.image }} style={{ width: 40, height: 40, borderRadius: 8, marginRight: 12 }} />
-                      <Text style={{ color: theme.primaryText, fontWeight: 'bold', fontSize: 16 }}>{fullRecipe.name}</Text>
+                      <Image source={{ uri: recipe.image }} style={{ width: 40, height: 40, borderRadius: 8, marginRight: 12 }} />
+                      <Text style={{ color: theme.primaryText, fontWeight: 'bold', fontSize: 16 }}>{recipe.name}</Text>
                     </TouchableOpacity>
-                  );
-                })
-              )}
-            </ScrollView>
-            <TouchableOpacity onPress={() => setCookbookRecipesModalVisible(false)} style={{ marginTop: 16 }}>
-              <Text style={{ color: theme.tertiaryText, fontSize: 16 }}>Cancel</Text>
-            </TouchableOpacity>
+                  ))
+                )}
+              </ScrollView>
+              <TouchableOpacity onPress={() => setMealPlanModalVisible(false)} style={{ marginTop: 16 }}>
+                <Text style={{ color: theme.tertiaryText, fontSize: 16 }}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
 
-      {/* Meal plan recipes modal */}
-      <Modal visible={mealPlanModalVisible} transparent animationType="fade">
-        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.2)', justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ backgroundColor: theme.modalBackground, borderRadius: 20, padding: 24, width: '85%', alignItems: 'center', shadowColor: theme.shadow, shadowOpacity: 0.2, shadowRadius: 10, elevation: 10 }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 24, color: theme.primaryText }}>Select from Meal Plan</Text>
-            <ScrollView style={{ width: '100%', maxHeight: 300 }}>
-              {getAllMealPlanRecipes().length === 0 ? (
-                <Text style={{ color: theme.tertiaryText, textAlign: 'center', marginVertical: 20 }}>No recipes found in meal plan.</Text>
-              ) : (
-                getAllMealPlanRecipes().map((recipe, idx) => (
-                  <TouchableOpacity
-                    key={recipe.name + idx}
-                    onPress={() => handleSelectMealPlanRecipe(recipe)}
-                    style={{ 
-                      padding: 16, 
-                      borderRadius: 10, 
-                      backgroundColor: theme.tertiaryBackground, 
-                      marginBottom: 10, 
-                      borderWidth: 1, 
-                      borderColor: theme.primaryGreen, 
-                      flexDirection: 'row', 
-                      alignItems: 'center' 
-                    }}
-                  >
-                    <Image source={{ uri: recipe.image }} style={{ width: 40, height: 40, borderRadius: 8, marginRight: 12 }} />
-                    <Text style={{ color: theme.primaryText, fontWeight: 'bold', fontSize: 16 }}>{recipe.name}</Text>
-                  </TouchableOpacity>
-                ))
-              )}
-            </ScrollView>
-            <TouchableOpacity onPress={() => setMealPlanModalVisible(false)} style={{ marginTop: 16 }}>
-              <Text style={{ color: theme.tertiaryText, fontSize: 16 }}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <ImportTab currentPage="Groceries" />
-    </View>
+        <ImportTab currentPage="Groceries" />
+      </View>
+    </>
   );
 };
 
