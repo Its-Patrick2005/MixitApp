@@ -50,7 +50,7 @@ const FoodCard = ({ name, image }) => {
     <TouchableOpacity
       onPress={() =>
         navigation.navigate("Detailedfoodlist", {
-          mealName: name.toLowerCase(),
+          mealName: (name || '').toLowerCase(),
         })
       }
       style={{ flexDirection: 'column', alignItems: 'center', marginBottom: 8, marginLeft: 8 }}
@@ -157,7 +157,7 @@ const FoodCard2Component = () => {
   const foodCards = useMemo(() => {
     return FoodData.map((food) => (
       <TouchableOpacity
-        key={food.id}
+        key={food.id || food.name || food}
         onPress={() => handleFoodPress(food)}
         style={{
           width: "48%",
@@ -295,7 +295,7 @@ export const Detailedfoodlist = React.memo(() => {
 
   const filteredFoods = useMemo(() => {
     return FoodData.filter((food) =>
-      food.id.toLowerCase().startsWith(mealName)
+      (food.id || '').toLowerCase().startsWith((mealName || '').toLowerCase())
     );
   }, [mealName]);
 

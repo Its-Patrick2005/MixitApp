@@ -87,7 +87,7 @@ const Recipe = ({ cookbooks = [], setCookbooks = () => {} }) => {
 
   const handleAddRecipe = (foodName) => {
     const found = foodList.find(
-      (item) => item.name.toLowerCase() === foodName.trim().toLowerCase()
+      (item) => (item.name || '').toLowerCase() === (foodName || '').trim().toLowerCase()
     );
 
     if (!found || activeCookbookIndex === null) {
@@ -98,7 +98,7 @@ const Recipe = ({ cookbooks = [], setCookbooks = () => {} }) => {
     // Check if the food is already in the cookbook
     const currentCookbook = localCookbooks[activeCookbookIndex];
     const isAlreadyAdded = currentCookbook.recipes.some(
-      (recipe) => recipe.name.toLowerCase() === found.name.toLowerCase()
+      (recipe) => (recipe.name || '').toLowerCase() === (found.name || '').toLowerCase()
     );
 
     if (isAlreadyAdded) {

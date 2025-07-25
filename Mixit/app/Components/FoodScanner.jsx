@@ -231,12 +231,12 @@ const FoodScanner = ({ visible, onClose, onFoodDetected, capturedImageUri }) => 
     }
     
     // Enhanced smart matching algorithm
-    const searchTerm = foodName.toLowerCase().trim();
+    const searchTerm = (foodName || '').toLowerCase().trim();
     
     // First, try exact match
     let match = foodList.find(food => 
-      food.name.toLowerCase().includes(searchTerm) ||
-      searchTerm.includes(food.name.toLowerCase())
+      (food.name || '').toLowerCase().includes(searchTerm) ||
+      searchTerm.includes((food.name || '').toLowerCase())
     );
     
     if (match) {
@@ -245,7 +245,7 @@ const FoodScanner = ({ visible, onClose, onFoodDetected, capturedImageUri }) => 
     
     // Then try partial matching with word splitting
     match = foodList.find(food => {
-      const foodWords = food.name.toLowerCase().split(' ');
+      const foodWords = (food.name || '').toLowerCase().split(' ');
       const searchWords = searchTerm.split(' ');
       
       return foodWords.some(word => 
@@ -263,7 +263,7 @@ const FoodScanner = ({ visible, onClose, onFoodDetected, capturedImageUri }) => 
     match = foodList.find(food => {
       if (food.ingredients && Array.isArray(food.ingredients)) {
         return food.ingredients.some(ingredient => 
-          ingredient.toLowerCase().includes(searchTerm)
+          (ingredient || '').toLowerCase().includes(searchTerm)
         );
       }
       return false;
@@ -321,7 +321,7 @@ const FoodScanner = ({ visible, onClose, onFoodDetected, capturedImageUri }) => 
     
     const category = categoryMatches[searchTerm];
     if (category) {
-      match = foodList.find(food => food.id.toLowerCase().startsWith(category));
+      match = foodList.find(food => (food.id || '').toLowerCase().startsWith(category));
       if (match) {
         return match;
       }
@@ -347,7 +347,7 @@ const FoodScanner = ({ visible, onClose, onFoodDetected, capturedImageUri }) => 
     const similarWord = similarWords[searchTerm];
     if (similarWord) {
       match = foodList.find(food => 
-        food.name.toLowerCase().includes(similarWord)
+        (food.name || '').toLowerCase().includes(similarWord)
       );
       if (match) {
         return match;

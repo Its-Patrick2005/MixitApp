@@ -24,11 +24,11 @@ const ImportPopUp = ({ visible, onClose, onWriteFromScratch }) => {
       return;
     }
 
-    const searchTerm = pasteText.trim().toLowerCase();
+    const searchTerm = (pasteText || '').trim().toLowerCase();
     
     // Enhanced search algorithm
     const found = foodList.find(food => {
-      const foodName = food.name.toLowerCase();
+      const foodName = (food.name || '').toLowerCase();
       const searchWords = searchTerm.split(' ');
       const foodWords = foodName.split(' ');
       

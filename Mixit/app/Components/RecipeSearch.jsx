@@ -25,12 +25,12 @@ const RecipeSearch = () => {
       return;
     }
 
-    const searchTerm = searchText.trim().toLowerCase();
+    const searchTerm = (searchText || '').trim().toLowerCase();
     console.log('Searching for:', searchTerm);
     
     // Enhanced search algorithm
     const results = foodList.filter(food => {
-      const foodName = food.name.toLowerCase();
+      const foodName = (food.name || '').toLowerCase();
       const searchWords = searchTerm.split(' ');
       const foodWords = foodName.split(' ');
       

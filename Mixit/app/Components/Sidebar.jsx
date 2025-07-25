@@ -7,6 +7,9 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useSidebarUser } from '../../sidebarContext';
 import { useTheme } from '../theme.jsx';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api, { setAuthToken } from '../services/api';
+// Remove import { navigate } from '../../navigationRef';
 
 const placeholderImage = require('../../assets/images/Logo.png');
 
@@ -205,7 +208,7 @@ const Sidebar = ({ visible, onClose }) => {
             overflow: 'hidden',
             elevation: 20,
           }}>
-            <SettingsModalContent onClose={() => setShowSettings(false)} />
+            <SettingsModalContent onClose={() => setShowSettings(false)} navigation={navigation} />
           </View>
         </View>
       </Modal>
@@ -234,7 +237,7 @@ const Sidebar = ({ visible, onClose }) => {
 };
 
 // Settings Modal Content (copy of Settings page, but with a close button)
-const SettingsModalContent = ({ onClose }) => {
+const SettingsModalContent = ({ onClose, navigation }) => {
   const { theme } = useTheme();
   const [showAccountSettings, setShowAccountSettings] = useState(false);
   return (
@@ -279,6 +282,7 @@ const SettingsModalContent = ({ onClose }) => {
               alignItems: 'center',
               minWidth: 100,
             }}
+            onPress={() => navigation.navigate('Onboard')}
           >
             <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold', textTransform: 'lowercase' }}>log out</Text>
           </TouchableOpacity>
@@ -343,6 +347,7 @@ const DeleteAccountModalContent = ({ onClose }) => {
             shadowRadius: 4,
             elevation: 4,
           }}
+          onPress={() => { /* No-op or placeholder */ }}
         >
           <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold', textTransform: 'none' }}>
             i want to delete my account

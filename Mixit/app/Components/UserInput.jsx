@@ -43,7 +43,7 @@ const UserInput = () => {
     for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
     for (let i = 1; i <= a.length; i++) {
       for (let j = 1; j <= b.length; j++) {
-        if (a[i - 1].toLowerCase() === b[j - 1].toLowerCase()) {
+        if ((a[i - 1] || '').toLowerCase() === (b[j - 1] || '').toLowerCase()) {
           matrix[i][j] = matrix[i - 1][j - 1];
         } else {
           matrix[i][j] = Math.min(
@@ -63,7 +63,7 @@ const UserInput = () => {
     let best = null;
     let minDist = Infinity;
     for (const ing of allIngredients) {
-      const dist = getLevenshtein(input.trim().toLowerCase(), ing.name.toLowerCase());
+      const dist = getLevenshtein((input || '').trim().toLowerCase(), (ing.name || '').toLowerCase());
       if (dist < minDist) {
         minDist = dist;
         best = ing;
@@ -216,7 +216,7 @@ const UserInput = () => {
       return;
     }
     // Check for duplicate
-    if (cookbooks.some(cb => cb.title.toLowerCase() === name.toLowerCase())) {
+    if (cookbooks.some(cb => (cb.title || '').toLowerCase() === name.toLowerCase())) {
       alert('A cookbook with this name already exists.');
       return;
     }

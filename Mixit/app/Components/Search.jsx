@@ -20,10 +20,10 @@ const Search = ({ searchType = "food", cookbooks = [], setCookbooks = () => {} }
   // Filter based on search type
   const filteredResults = searchType === "cookbooks" 
     ? cookbooks.filter((cookbook) =>
-        cookbook.title.toLowerCase().includes(searchQuery.toLowerCase())
+        (cookbook.title || '').toLowerCase().includes((searchQuery || '').toLowerCase())
       )
     : foodList.filter((food) =>
-        food.name.toLowerCase().includes(searchQuery.toLowerCase())
+        (food.name || '').toLowerCase().includes((searchQuery || '').toLowerCase())
       );
 
   const handleItemPress = (item) => {

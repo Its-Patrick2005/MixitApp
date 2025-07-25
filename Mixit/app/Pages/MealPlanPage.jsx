@@ -180,9 +180,8 @@ const MealPlanPage = ({ navigation }) => {
     
     let filteredRecipes = foodList.filter(food => {
       if (!food || !food.id) return false;
-      
-      const foodId = food.id.toLowerCase();
-      const mealTypeLower = mealType.toLowerCase();
+      const foodId = (food.id || '').toLowerCase();
+      const mealTypeLower = (mealType || '').toLowerCase();
       
       if (mealTypeLower === 'breakfast') {
         return foodId.includes('breakfast');
@@ -198,9 +197,9 @@ const MealPlanPage = ({ navigation }) => {
 
     // Apply search filter if there's a search query
     if (recipeSearchQuery.trim()) {
-      const searchLower = recipeSearchQuery.toLowerCase();
+      const searchLower = (recipeSearchQuery || '').toLowerCase();
       filteredRecipes = filteredRecipes.filter(recipe => 
-        recipe.name.toLowerCase().includes(searchLower)
+        (recipe.name || '').toLowerCase().includes(searchLower)
       );
     }
 

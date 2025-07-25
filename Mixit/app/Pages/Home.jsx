@@ -14,14 +14,13 @@ const Home = React.memo(() => {
   
   return (
     <View style={{ flex: 1, backgroundColor: theme.primaryBackground }}>
-      <View className="mb-4">
+      <View style={{ marginBottom: 0 }}>
         <Navbar />
       </View>
-
-      <View className="mb-4">
+      <View style={{ marginBottom: 0 }}>
         <Search searchType="food" />
       </View>
-      <View>
+      <View style={{ marginTop: 0, marginBottom: 0, minHeight: 110 }}>
         <FoodCards />
       </View>
       <View className="py-4 ">

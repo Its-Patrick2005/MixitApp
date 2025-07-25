@@ -16,6 +16,7 @@ import {
 import { Image as ExpoImage } from 'expo-image';
 import ingredientsData from '../Ingredients';
 import { useTheme } from '../theme.jsx';
+import FoodData from '../FoodData';
 
 const MealCard = ({ route, navigation }) => {
   const { food } = route.params;
@@ -30,6 +31,7 @@ const MealCard = ({ route, navigation }) => {
   const [mealPlanModalVisible, setMealPlanModalVisible] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [mealPlanData, setMealPlanData] = useState({});
+  const [servings, setServings] = useState(food.servings || 1);
 
   // Load cookbooks from AsyncStorage on component mount
   useEffect(() => {
@@ -199,7 +201,7 @@ const MealCard = ({ route, navigation }) => {
     for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
     for (let i = 1; i <= a.length; i++) {
       for (let j = 1; j <= b.length; j++) {
-        if (a[i - 1].toLowerCase() === b[j - 1].toLowerCase()) {
+        if ((a[i - 1] || '').toLowerCase() === (b[j - 1] || '').toLowerCase()) {
           matrix[i][j] = matrix[i - 1][j - 1];
         } else {
           matrix[i][j] = Math.min(
@@ -219,7 +221,7 @@ const MealCard = ({ route, navigation }) => {
     let best = null;
     let minDist = Infinity;
     for (const ing of allIngredients) {
-      const dist = getLevenshtein(input.trim().toLowerCase(), ing.name.toLowerCase());
+      const dist = getLevenshtein((input || '').trim().toLowerCase(), (ing.name || '').toLowerCase());
       if (dist < minDist) {
         minDist = dist;
         best = ing;
@@ -231,6 +233,46 @@ const MealCard = ({ route, navigation }) => {
     if (minDist <= 1 || (input.length > 5 && minDist <= 2)) return best;
     return null;
   }
+
+  // Find the original recipe from FoodData to get the base servings and ingredients
+  const originalRecipe = FoodData.find(f => f.name === food.name);
+  const baseServings = originalRecipe?.servings || 1;
+  const baseIngredients = typeof originalRecipe?.ingredients === 'function'
+    ? originalRecipe.ingredients(servings)
+    : originalRecipe?.ingredients || food.ingredients;
+  const baseMethod = typeof originalRecipe?.method === 'function'
+    ? originalRecipe.method(servings)
+    : originalRecipe?.method || food.method;
+
+  // Helper to scale ingredient quantities
+  function scaleIngredient(ingredient, scale) {
+    // Try to parse a leading number (quantity) and the rest as the ingredient name
+    const match = /^([\d.\/]+)\s*(.*)$/i.exec(ingredient);
+    if (match) {
+      let [_, qty, rest] = match;
+      // Handle fractions like 1/2
+      let num = 1;
+      if (qty.includes('/')) {
+        const parts = qty.split('/');
+        if (parts.length === 2) {
+          num = parseFloat(parts[0]) / parseFloat(parts[1]);
+        }
+      } else {
+        num = parseFloat(qty);
+      }
+      if (!isNaN(num)) {
+        const scaled = Math.round((num + Number.EPSILON) * 100) / 100;
+        return `${scaled} ${rest}`.trim();
+      }
+    }
+    // If no number, just return as is
+    return ingredient;
+  }
+
+  // Calculate scale factor
+  // If using new FoodData.js, ingredients are already scaled by servings
+  const scaledIngredients = baseIngredients;
+  const scaledMethod = baseMethod;
 
   const Card = ({ children }) => (
     <View
@@ -357,12 +399,12 @@ const MealCard = ({ route, navigation }) => {
         </View>
       </View>
 
-      {/* Rating and Action Buttons */}
+      {/* Action Buttons (restored) */}
       <View style={{ padding: 20, paddingBottom: 0, flexDirection: 'column', alignItems: 'flex-start' }}>
         <Text style={{ fontSize: 18, marginBottom: 16, color: theme.primaryText, fontWeight: '600' }}>
           Ready to cook? 
         </Text>
-        <View style={{ flexDirection: 'row', gap: 12, width: '100%' }}>
+        <View style={{ flexDirection: 'row', gap: 12, width: '100%', marginBottom: 12 }}>
           <TouchableOpacity
             onPress={() => setMealPlanModalVisible(true)}
             style={{
@@ -386,7 +428,6 @@ const MealCard = ({ route, navigation }) => {
               Meal Plan
             </Text>
           </TouchableOpacity>
-          
           <TouchableOpacity
             onPress={() => {
               if (cookbooks.length === 0) {
@@ -416,7 +457,91 @@ const MealCard = ({ route, navigation }) => {
               Save Recipe
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={async () => {
+              try {
+                // Get current grocery items
+                const stored = await AsyncStorage.getItem('groceryItems');
+                let groceryItems = [];
+                if (stored) {
+                  groceryItems = JSON.parse(stored);
+                }
+                // Add all scaled ingredients (avoid duplicates)
+                const newIngredients = Array.isArray(scaledIngredients) ? scaledIngredients : [];
+                const updatedGroceryItems = [...groceryItems];
+                newIngredients.forEach(ingredient => {
+                  if (!updatedGroceryItems.includes(ingredient)) {
+                    updatedGroceryItems.push(ingredient);
+                  }
+                });
+                await AsyncStorage.setItem('groceryItems', JSON.stringify(updatedGroceryItems));
+
+                // Also add a market list card (recipe) to savedMarketRecipes
+                const savedRecipesRaw = await AsyncStorage.getItem('savedMarketRecipes');
+                let savedRecipes = [];
+                if (savedRecipesRaw) {
+                  savedRecipes = JSON.parse(savedRecipesRaw);
+                }
+                // Avoid duplicate recipes by name
+                const alreadyExists = savedRecipes.some(r => r.name === food.name);
+                if (!alreadyExists) {
+                  savedRecipes.push({
+                    name: food.name,
+                    image: food.image,
+                    rating: food.rating,
+                    ingredients: scaledIngredients,
+                    checked: [],
+                    unchecked: Array.isArray(scaledIngredients) ? [...scaledIngredients] : [],
+                    lastUpdated: new Date().toISOString()
+                  });
+                  await AsyncStorage.setItem('savedMarketRecipes', JSON.stringify(savedRecipes));
+                }
+
+                Alert.alert('Added to Grocery List', 'All ingredients and a market list card have been added!');
+              } catch (e) {
+                Alert.alert('Error', 'Failed to add ingredients to grocery list.');
+              }
+            }}
+            style={{
+              backgroundColor: theme.primaryGreen,
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 25,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flex: 1,
+              shadowColor: theme.shadow,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 4,
+            }}
+          >
+            <Ionicons name="cart" size={18} color="white" />
+            <Text style={{ color: 'white', marginLeft: 8, fontSize: 14, fontWeight: 'bold' }}>
+              Add to Grocery List
+            </Text>
+          </TouchableOpacity>
         </View>
+      </View>
+
+      {/* Servings Selector */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+        <Text style={{ fontSize: 16, color: theme.primaryText, fontWeight: 'bold', marginRight: 12 }}>Servings:</Text>
+        <TouchableOpacity
+          onPress={() => setServings(Math.max(1, servings - 1))}
+          style={{ backgroundColor: theme.primaryGreen, borderRadius: 16, padding: 6, marginRight: 8 }}
+        >
+          <Ionicons name="remove" size={18} color="white" />
+        </TouchableOpacity>
+        <Text style={{ fontSize: 16, color: theme.primaryText, fontWeight: 'bold', marginHorizontal: 4 }}>{servings}</Text>
+        <TouchableOpacity
+          onPress={() => setServings(servings + 1)}
+          style={{ backgroundColor: theme.primaryGreen, borderRadius: 16, padding: 6, marginLeft: 8 }}
+        >
+          <Ionicons name="add" size={18} color="white" />
+        </TouchableOpacity>
       </View>
 
       {/* Ingredients Section */}
@@ -442,8 +567,8 @@ const MealCard = ({ route, navigation }) => {
           shadowRadius: 4,
           elevation: 3,
         }}>
-          {Array.isArray(food.ingredients) ? (
-            food.ingredients.map((item, index) => {
+          {Array.isArray(scaledIngredients) ? (
+            scaledIngredients.map((item, index) => {
               const match = findBestIngredientMatch(item);
               return (
                 <View key={index} style={{ 
@@ -459,7 +584,7 @@ const MealCard = ({ route, navigation }) => {
                   )}
                   <Text style={{ fontSize: 16, color: theme.primaryText, flex: 1 }}>
                     {match ? match.name : item}
-                    {match && match.name.toLowerCase() !== item.trim().toLowerCase() && (
+                    {match && (match.name || '').toLowerCase() !== (item || '').trim().toLowerCase() && (
                       <Text style={{ color: theme.tertiaryText, fontStyle: 'italic', marginLeft: 6 }}> (Did you mean?)</Text>
                     )}
                   </Text>
@@ -467,7 +592,7 @@ const MealCard = ({ route, navigation }) => {
               );
             })
           ) : (
-            <Text style={{ fontSize: 16, color: theme.primaryText }}>{food.ingredients}</Text>
+            <Text style={{ fontSize: 16, color: theme.primaryText }}>{scaledIngredients}</Text>
           )}
         </View>
       </View>
@@ -495,8 +620,8 @@ const MealCard = ({ route, navigation }) => {
           shadowRadius: 4,
           elevation: 3,
         }}>
-          {Array.isArray(food.method) ? (
-            food.method.map((step, index) => (
+          {Array.isArray(scaledMethod) ? (
+            scaledMethod.map((step, index) => (
               <View key={index} style={{ 
                 flexDirection: 'row', 
                 marginBottom: 12,
@@ -522,7 +647,7 @@ const MealCard = ({ route, navigation }) => {
               </View>
             ))
           ) : (
-            <Text style={{ fontSize: 16, color: theme.primaryText }}>{food.method}</Text>
+            <Text style={{ fontSize: 16, color: theme.primaryText }}>{scaledMethod}</Text>
           )}
         </View>
       </View>
