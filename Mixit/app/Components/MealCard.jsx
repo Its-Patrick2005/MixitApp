@@ -17,7 +17,7 @@ import { Image as ExpoImage } from 'expo-image';
 import ingredientsData from '../Ingredients';
 import { useTheme } from '../theme.jsx';
 import FoodData from '../FoodData';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const MealCard = ({ route, navigation }) => {
   const { food } = route.params;
@@ -312,382 +312,267 @@ const MealCard = ({ route, navigation }) => {
         borderBottomColor: theme.borderLight,
       }}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Ionicons name="arrow-back" size={24} color={theme.primaryGreen} />
-          <Text style={{ color: theme.primaryGreen, fontWeight: 'bold', fontSize: 18, marginLeft: 6 }}>Back</Text>
+          <AntDesign name="left" size={24} color={theme.primaryGreen} />
+          <Text style={{ fontSize: 18, color: theme.primaryGreen, marginLeft: 4 }}>Back</Text>
         </TouchableOpacity>
-        <Text style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: theme.primaryText }}>Details</Text>
-        <View style={{ width: 48 }} />
       </View>
-      {/* Main Scrollable Content */}
-      <ScrollView style={{ paddingTop: 72 }} contentContainerStyle={{ paddingBottom: 40 }}>
-
-      {/* Food Image */}
-      <View
-        style={{
-          height: screenHeight * 0.35,
-          position: "relative",
-          overflow: "hidden",
-          borderRadius: 20,
-          marginHorizontal: 10,
-          marginBottom: 20,
-          shadowColor: theme.shadow,
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.3,
-          shadowRadius: 12,
-          elevation: 8,
-        }}
+      <ScrollView
+        style={{ backgroundColor: theme.primaryBackground, flex: 1, paddingTop: 72, paddingHorizontal: 12 }}
+        contentContainerStyle={{ paddingBottom: 40 }}
       >
-        <ExpoImage
-          source={food.image ? { uri: food.image } : require("../../assets/images/Logo.png")}
-          style={{ width: "100%", height: "100%" }}
-          contentFit="cover"
-          placeholder={require("../../assets/images/Logo.png")}
-          transition={300}
-        />
-        {/* Gradient overlay for better text readability */}
+        {/* Food Image */}
         <View
           style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0, 58, 0, 0.3)",
-          }}
-        />
-        
-        {/* Food name with enhanced styling */}
-        <View style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          padding: 20,
-          paddingBottom: 25,
-        }}>
-          <Text
-            style={{
-              fontSize: 28,
-              fontWeight: "bold",
-              color: "#ffffff",
-              textShadowColor: "rgba(0, 0, 0, 0.8)",
-              textShadowOffset: { width: 2, height: 2 },
-              textShadowRadius: 4,
-              lineHeight: 32,
-            }}
-          >
-            {food.name}
-          </Text>
-          
-          {/* Rating badge */}
-          <View style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            paddingHorizontal: 12,
-            paddingVertical: 6,
+            height: screenHeight * 0.35,
+            position: "relative",
+            overflow: "hidden",
             borderRadius: 20,
-            alignSelf: 'flex-start',
-            marginTop: 8,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.darkGreen, marginRight: 4 }}>
-              ⭐ {food.rating}
-            </Text>
-          </View>
-        </View>
-
-        {/* Decorative corner accent */}
-        <View style={{
-          position: 'absolute',
-          top: 20,
-          right: 20,
-          width: 60,
-          height: 60,
-          borderRadius: 30,
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-        }}>
+            marginHorizontal: 10,
+            marginBottom: 20,
+            shadowColor: theme.shadow,
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.3,
+            shadowRadius: 12,
+            elevation: 8,
+          }}
+        >
           <ExpoImage
-            source={require("../../assets/images/Asset 4.png")}
-            style={{ width: 40, height: 40 }}
-            contentFit="contain"
+            source={food.image ? { uri: food.image } : require("../../assets/images/Logo.png")}
+            style={{ width: "100%", height: "100%" }}
+            contentFit="cover"
+            placeholder={require("../../assets/images/Logo.png")}
             transition={300}
           />
-        </View>
-      </View>
+          {/* Gradient overlay for better text readability */}
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0, 58, 0, 0.3)",
+            }}
+          />
+          
+          {/* Food name with enhanced styling */}
+          <View style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            padding: 20,
+            paddingBottom: 25,
+          }}>
+            <Text
+              style={{
+                fontSize: 28,
+                fontWeight: "bold",
+                color: "#ffffff",
+                textShadowColor: "rgba(0, 0, 0, 0.8)",
+                textShadowOffset: { width: 2, height: 2 },
+                textShadowRadius: 4,
+                lineHeight: 32,
+              }}
+            >
+              {food.name}
+            </Text>
+            
+            {/* Rating badge */}
+            <View style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.9)',
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              borderRadius: 20,
+              alignSelf: 'flex-start',
+              marginTop: 8,
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}>
+              <Text style={{ fontSize: 16, fontWeight: 'bold', color: theme.darkGreen, marginRight: 4 }}>
+                ⭐ {food.rating}
+              </Text>
+            </View>
+          </View>
 
-      {/* Action Buttons (restored) */}
-      <View style={{ padding: 20, paddingBottom: 0, flexDirection: 'column', alignItems: 'flex-start' }}>
-        <Text style={{ fontSize: 18, marginBottom: 16, color: theme.primaryText, fontWeight: '600' }}>
-          Ready to cook? 
-        </Text>
-        <View style={{ flexDirection: 'row', gap: 12, width: '100%', marginBottom: 12 }}>
-          <TouchableOpacity
-            onPress={() => setMealPlanModalVisible(true)}
-            style={{
-              backgroundColor: theme.primaryGreen,
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 25,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
-              shadowColor: theme.shadow,
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.2,
-              shadowRadius: 4,
-              elevation: 4,
-            }}
-          >
-            <Ionicons name="calendar" size={18} color="white" />
-            <Text style={{ color: 'white', marginLeft: 8, fontSize: 14, fontWeight: 'bold' }}>
-              Meal Plan
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              if (cookbooks.length === 0) {
-                setCreateCookbookModalVisible(true);
-              } else {
-                setImportModalVisible(true);
-              }
-            }}
-            style={{
-              backgroundColor: theme.primaryGreen,
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 25,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
-              shadowColor: theme.shadow,
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.2,
-              shadowRadius: 4,
-              elevation: 4,
-            }}
-          >
-            <Ionicons name="add-circle" size={18} color="white" />
-            <Text style={{ color: 'white', marginLeft: 8, fontSize: 14, fontWeight: 'bold' }}>
-              Save Recipe
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={async () => {
-              try {
-                // Get current grocery items
-                const stored = await AsyncStorage.getItem('groceryItems');
-                let groceryItems = [];
-                if (stored) {
-                  groceryItems = JSON.parse(stored);
+          {/* Decorative corner accent */}
+          <View style={{
+            position: 'absolute',
+            top: 20,
+            right: 20,
+            width: 60,
+            height: 60,
+            borderRadius: 30,
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+          }}>
+            <ExpoImage
+              source={require("../../assets/images/Asset 4.png")}
+              style={{ width: 40, height: 40 }}
+              contentFit="contain"
+              transition={300}
+            />
+          </View>
+        </View>
+
+        {/* Action Buttons (restored) */}
+        <View style={{ padding: 20, paddingBottom: 0, flexDirection: 'column', alignItems: 'flex-start' }}>
+          <Text style={{ fontSize: 18, marginBottom: 16, color: theme.primaryText, fontWeight: '600' }}>
+            Ready to cook? 
+          </Text>
+          <View style={{ flexDirection: 'row', gap: 12, width: '100%', marginBottom: 12 }}>
+            <TouchableOpacity
+              onPress={() => setMealPlanModalVisible(true)}
+              style={{
+                backgroundColor: theme.primaryGreen,
+                paddingVertical: 12,
+                paddingHorizontal: 20,
+                borderRadius: 25,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 1,
+                shadowColor: theme.shadow,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 4,
+                elevation: 4,
+              }}
+            >
+              <Ionicons name="calendar" size={18} color="white" />
+              <Text style={{ color: 'white', marginLeft: 8, fontSize: 14, fontWeight: 'bold' }}>
+                Meal Plan
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                if (cookbooks.length === 0) {
+                  setCreateCookbookModalVisible(true);
+                } else {
+                  setImportModalVisible(true);
                 }
-                // Add all scaled ingredients (avoid duplicates)
-                const newIngredients = Array.isArray(scaledIngredients) ? scaledIngredients : [];
-                const updatedGroceryItems = [...groceryItems];
-                newIngredients.forEach(ingredient => {
-                  if (!updatedGroceryItems.includes(ingredient)) {
-                    updatedGroceryItems.push(ingredient);
+              }}
+              style={{
+                backgroundColor: theme.primaryGreen,
+                paddingVertical: 12,
+                paddingHorizontal: 20,
+                borderRadius: 25,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 1,
+                shadowColor: theme.shadow,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 4,
+                elevation: 4,
+              }}
+            >
+              <Ionicons name="add-circle" size={18} color="white" />
+              <Text style={{ color: 'white', marginLeft: 8, fontSize: 14, fontWeight: 'bold' }}>
+                Save Recipe
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={async () => {
+                try {
+                  // Get current grocery items
+                  const stored = await AsyncStorage.getItem('groceryItems');
+                  let groceryItems = [];
+                  if (stored) {
+                    groceryItems = JSON.parse(stored);
                   }
-                });
-                await AsyncStorage.setItem('groceryItems', JSON.stringify(updatedGroceryItems));
-
-                // Also add a market list card (recipe) to savedMarketRecipes
-                const savedRecipesRaw = await AsyncStorage.getItem('savedMarketRecipes');
-                let savedRecipes = [];
-                if (savedRecipesRaw) {
-                  savedRecipes = JSON.parse(savedRecipesRaw);
-                }
-                // Avoid duplicate recipes by name
-                const alreadyExists = savedRecipes.some(r => r.name === food.name);
-                if (!alreadyExists) {
-                  savedRecipes.push({
-                    name: food.name,
-                    image: food.image,
-                    rating: food.rating,
-                    ingredients: scaledIngredients,
-                    checked: [],
-                    unchecked: Array.isArray(scaledIngredients) ? [...scaledIngredients] : [],
-                    lastUpdated: new Date().toISOString()
+                  // Add all scaled ingredients (avoid duplicates)
+                  const newIngredients = Array.isArray(scaledIngredients) ? scaledIngredients : [];
+                  const updatedGroceryItems = [...groceryItems];
+                  newIngredients.forEach(ingredient => {
+                    if (!updatedGroceryItems.includes(ingredient)) {
+                      updatedGroceryItems.push(ingredient);
+                    }
                   });
-                  await AsyncStorage.setItem('savedMarketRecipes', JSON.stringify(savedRecipes));
-                }
+                  await AsyncStorage.setItem('groceryItems', JSON.stringify(updatedGroceryItems));
 
-                Alert.alert('Added to Grocery List', 'All ingredients and a market list card have been added!');
-              } catch (e) {
-                Alert.alert('Error', 'Failed to add ingredients to grocery list.');
-              }
-            }}
-            style={{
-              backgroundColor: theme.primaryGreen,
-              paddingVertical: 12,
-              paddingHorizontal: 20,
-              borderRadius: 25,
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1,
-              shadowColor: theme.shadow,
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.2,
-              shadowRadius: 4,
-              elevation: 4,
-            }}
+                  // Also add a market list card (recipe) to savedMarketRecipes
+                  const savedRecipesRaw = await AsyncStorage.getItem('savedMarketRecipes');
+                  let savedRecipes = [];
+                  if (savedRecipesRaw) {
+                    savedRecipes = JSON.parse(savedRecipesRaw);
+                  }
+                  // Avoid duplicate recipes by name
+                  const alreadyExists = savedRecipes.some(r => r.name === food.name);
+                  if (!alreadyExists) {
+                    savedRecipes.push({
+                      name: food.name,
+                      image: food.image,
+                      rating: food.rating,
+                      ingredients: scaledIngredients,
+                      checked: [],
+                      unchecked: Array.isArray(scaledIngredients) ? [...scaledIngredients] : [],
+                      lastUpdated: new Date().toISOString()
+                    });
+                    await AsyncStorage.setItem('savedMarketRecipes', JSON.stringify(savedRecipes));
+                  }
+
+                  Alert.alert('Added to Grocery List', 'All ingredients and a market list card have been added!');
+                } catch (e) {
+                  Alert.alert('Error', 'Failed to add ingredients to grocery list.');
+                }
+              }}
+              style={{
+                backgroundColor: theme.primaryGreen,
+                paddingVertical: 12,
+                paddingHorizontal: 20,
+                borderRadius: 25,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 1,
+                shadowColor: theme.shadow,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 4,
+                elevation: 4,
+              }}
+            >
+              <Ionicons name="cart" size={18} color="white" />
+              <Text style={{ color: 'white', marginLeft: 8, fontSize: 14, fontWeight: 'bold' }}>
+                Add to Grocery List
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Servings Selector */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+          <Text style={{ fontSize: 16, color: theme.primaryText, fontWeight: 'bold', marginRight: 12 }}>Servings:</Text>
+          <TouchableOpacity
+            onPress={() => setServings(Math.max(1, servings - 1))}
+            style={{ backgroundColor: theme.primaryGreen, borderRadius: 16, padding: 6, marginRight: 8 }}
           >
-            <Ionicons name="cart" size={18} color="white" />
-            <Text style={{ color: 'white', marginLeft: 8, fontSize: 14, fontWeight: 'bold' }}>
-              Add to Grocery List
-            </Text>
+            <Ionicons name="remove" size={18} color="white" />
+          </TouchableOpacity>
+          <Text style={{ fontSize: 16, color: theme.primaryText, fontWeight: 'bold', marginHorizontal: 4 }}>{servings}</Text>
+          <TouchableOpacity
+            onPress={() => setServings(servings + 1)}
+            style={{ backgroundColor: theme.primaryGreen, borderRadius: 16, padding: 6, marginLeft: 8 }}
+          >
+            <Ionicons name="add" size={18} color="white" />
           </TouchableOpacity>
         </View>
-      </View>
 
-      {/* Servings Selector */}
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 16, color: theme.primaryText, fontWeight: 'bold', marginRight: 12 }}>Servings:</Text>
-        <TouchableOpacity
-          onPress={() => setServings(Math.max(1, servings - 1))}
-          style={{ backgroundColor: theme.primaryGreen, borderRadius: 16, padding: 6, marginRight: 8 }}
-        >
-          <Ionicons name="remove" size={18} color="white" />
-        </TouchableOpacity>
-        <Text style={{ fontSize: 16, color: theme.primaryText, fontWeight: 'bold', marginHorizontal: 4 }}>{servings}</Text>
-        <TouchableOpacity
-          onPress={() => setServings(servings + 1)}
-          style={{ backgroundColor: theme.primaryGreen, borderRadius: 16, padding: 6, marginLeft: 8 }}
-        >
-          <Ionicons name="add" size={18} color="white" />
-        </TouchableOpacity>
-      </View>
-
-      {/* Ingredients Section */}
-      <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-          <View style={{ backgroundColor: theme.primaryGreen, padding: 8, borderRadius: 20, marginRight: 10 }}>
-            <Ionicons name="restaurant" size={20} color="white" />
-          </View>
-          <Text style={{ fontSize: 20, fontWeight: "bold", color: theme.primaryText }}>
-            Ingredients
-          </Text>
-        </View>
-        <View style={{
-          backgroundColor: theme.tertiaryBackground,
-          borderRadius: 16,
-          padding: 16,
-          marginBottom: 20,
-          borderLeftWidth: 4,
-          borderLeftColor: theme.primaryGreen,
-          shadowColor: theme.shadow,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          elevation: 3,
-        }}>
-          {Array.isArray(scaledIngredients) ? (
-            scaledIngredients.map((item, index) => {
-              const match = findBestIngredientMatch(item);
-              // Only show emoji and match if the match name is a substring of the item (case-insensitive)
-              const isTrueMatch = match && item.toLowerCase().includes((match.name || '').toLowerCase());
-              return (
-                <View key={index} style={{ 
-                  flexDirection: 'row', 
-                  alignItems: 'center', 
-                  marginBottom: 8,
-                  paddingVertical: 4,
-                }}>
-                  {isTrueMatch ? (
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      {match.icon && match.iconSet === 'MaterialCommunityIcons' ? (
-                        <MaterialCommunityIcons name={match.icon} size={18} color={theme.primaryGreen} style={{ marginRight: 8 }} />
-                      ) : (
-                        <Text style={{ fontSize: 18, marginRight: 8 }}>{match.emoji}</Text>
-                      )}
-                      <Text style={{ fontSize: 16, color: theme.primaryText, flex: 1 }}>
-                        {item}
-                      </Text>
-                    </View>
-                  ) : (
-                    <Text style={{ fontSize: 16, color: theme.primaryText, flex: 1 }}>{item}</Text>
-                  )}
-                </View>
-              );
-            })
-          ) : (
-            <Text style={{ fontSize: 16, color: theme.primaryText }}>{scaledIngredients}</Text>
-          )}
-        </View>
-      </View>
-
-      {/* Method Section */}
-      <View style={{ paddingHorizontal: 20 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
-          <View style={{ backgroundColor: theme.primaryGreen, padding: 8, borderRadius: 20, marginRight: 10 }}>
-            <Ionicons name="list" size={20} color="white" />
-          </View>
-          <Text style={{ fontSize: 20, fontWeight: "bold", color: theme.primaryText }}>
-            Method
-          </Text>
-        </View>
-        <View style={{
-          backgroundColor: theme.tertiaryBackground,
-          borderRadius: 16,
-          padding: 16,
-          marginBottom: 20,
-          borderLeftWidth: 4,
-          borderLeftColor: theme.primaryGreen,
-          shadowColor: theme.shadow,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.1,
-          shadowRadius: 4,
-          elevation: 3,
-        }}>
-          {Array.isArray(scaledMethod) ? (
-            scaledMethod.map((step, index) => (
-              <View key={index} style={{ 
-                flexDirection: 'row', 
-                marginBottom: 12,
-                alignItems: 'flex-start',
-              }}>
-                <View style={{
-                  backgroundColor: theme.primaryGreen,
-                  borderRadius: 12,
-                  width: 24,
-                  height: 24,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginRight: 12,
-                  marginTop: 2,
-                }}>
-                  <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>
-                    {index + 1}
-                  </Text>
-                </View>
-                <Text style={{ fontSize: 16, color: theme.primaryText, flex: 1, lineHeight: 22 }}>
-                  {step}
-                </Text>
-              </View>
-            ))
-          ) : (
-            <Text style={{ fontSize: 16, color: theme.primaryText }}>{scaledMethod}</Text>
-          )}
-        </View>
-      </View>
-
-      {/* Fun Fact Section */}
-      {food.funFact && (
-        <View style={{ paddingHorizontal: 20 }}>
+        {/* Ingredients Section */}
+        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
             <View style={{ backgroundColor: theme.primaryGreen, padding: 8, borderRadius: 20, marginRight: 10 }}>
-              <Ionicons name="bulb" size={20} color="white" />
+              <Ionicons name="restaurant" size={20} color="white" />
             </View>
             <Text style={{ fontSize: 20, fontWeight: "bold", color: theme.primaryText }}>
-              Fun Fact
+              Ingredients
             </Text>
           </View>
           <View style={{
-            backgroundColor: theme.lightGreen,
+            backgroundColor: theme.tertiaryBackground,
             borderRadius: 16,
             padding: 16,
             marginBottom: 20,
@@ -699,259 +584,365 @@ const MealCard = ({ route, navigation }) => {
             shadowRadius: 4,
             elevation: 3,
           }}>
-            <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-              <Text style={{ fontSize: 24, marginRight: 8 }}>💡</Text>
-              <Text style={{ fontSize: 16, color: theme.primaryText, flex: 1, lineHeight: 22, fontStyle: 'italic' }}>
-                {food.funFact}
-              </Text>
+            {/* Ingredients List */}
+            <View style={{ marginTop: 24 }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.primaryText, marginBottom: 12 }}>Ingredients</Text>
+              {Array.isArray(scaledIngredients) && scaledIngredients.length > 0 ? (
+                scaledIngredients.map((ingredient, index) => {
+                  const name = typeof ingredient === 'object' && ingredient !== null ? ingredient.name : ingredient;
+                  const icon = typeof ingredient === 'object' && ingredient !== null ? ingredient.icon : undefined;
+                  const iconSet = typeof ingredient === 'object' && ingredient !== null ? ingredient.iconSet : undefined;
+                  const emoji = typeof ingredient === 'object' && ingredient !== null ? ingredient.emoji : '';
+                  return (
+                    <View key={index} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                      {icon && iconSet === 'MaterialCommunityIcons' ? (
+                        <MaterialCommunityIcons name={icon} size={18} color={theme.primaryGreen} style={{ marginRight: 8 }} />
+                      ) : emoji ? (
+                        <Text style={{ fontSize: 18, marginRight: 8 }}>{emoji}</Text>
+                      ) : null}
+                      <Text style={{ fontSize: 16, color: theme.primaryText }}>{name}</Text>
+                    </View>
+                  );
+                })
+              ) : (
+                <Text style={{ color: theme.secondaryText, fontStyle: 'italic' }}>No ingredients</Text>
+              )}
             </View>
           </View>
         </View>
-      )}
-      </ScrollView>
-      {/* Modals and overlays go here, outside the ScrollView */}
-      {/* Import to Cookbook Modal */}
-      <Modal visible={importModalVisible} transparent animationType="slide">
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <View style={{ backgroundColor: theme.modalBackground, padding: 20, borderRadius: 12, width: '85%', maxHeight: '70%' }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16, textAlign: 'center', color: theme.primaryText }}>
-              Add to Cookbook
-            </Text>
-            
-            <ScrollView style={{ maxHeight: 300 }}>
-              {cookbooks.map((cookbook, index) => (
-                <TouchableOpacity
-                  key={index}
-                  onPress={() => addToCookbook(index)}
-                  style={{
-                    padding: 12,
-                    borderBottomWidth: 1,
-                    borderBottomColor: theme.borderLight,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Ionicons name="book" size={20} color={theme.primaryGreen} />
-                  <Text style={{ marginLeft: 8, fontSize: 16, flex: 1, color: theme.primaryText }}>
-                    {cookbook.title}
-                  </Text>
-                  <Text style={{ color: theme.secondaryText, fontSize: 12 }}>
-                    {cookbook.recipes.length} recipes
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
 
-            <TouchableOpacity
-              onPress={() => {
-                setImportModalVisible(false);
-                setCreateCookbookModalVisible(true);
-              }}
-              style={{
-                backgroundColor: theme.primaryGreen,
-                padding: 12,
-                borderRadius: 8,
-                marginTop: 16,
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ color: 'white', fontWeight: 'bold' }}>
+        {/* Method Section */}
+        <View style={{ paddingHorizontal: 20 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+            <View style={{ backgroundColor: theme.primaryGreen, padding: 8, borderRadius: 20, marginRight: 10 }}>
+              <Ionicons name="list" size={20} color="white" />
+            </View>
+            <Text style={{ fontSize: 20, fontWeight: "bold", color: theme.primaryText }}>
+              Method
+            </Text>
+          </View>
+          <View style={{
+            backgroundColor: theme.tertiaryBackground,
+            borderRadius: 16,
+            padding: 16,
+            marginBottom: 20,
+            borderLeftWidth: 4,
+            borderLeftColor: theme.primaryGreen,
+            shadowColor: theme.shadow,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 3,
+          }}>
+            {Array.isArray(scaledMethod) ? (
+              scaledMethod.map((step, index) => (
+                <View key={index} style={{ 
+                  flexDirection: 'row', 
+                  marginBottom: 12,
+                  alignItems: 'flex-start',
+                }}>
+                  <View style={{
+                    backgroundColor: theme.primaryGreen,
+                    borderRadius: 12,
+                    width: 24,
+                    height: 24,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginRight: 12,
+                    marginTop: 2,
+                  }}>
+                    <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>
+                      {index + 1}
+                    </Text>
+                  </View>
+                  <Text style={{ fontSize: 16, color: theme.primaryText, flex: 1, lineHeight: 22 }}>
+                    {step}
+                  </Text>
+                </View>
+              ))
+            ) : (
+              <Text style={{ fontSize: 16, color: theme.primaryText }}>{scaledMethod}</Text>
+            )}
+          </View>
+        </View>
+
+        {/* Fun Fact Section */}
+        {food.funFact && (
+          <View style={{ paddingHorizontal: 20 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+              <View style={{ backgroundColor: theme.primaryGreen, padding: 8, borderRadius: 20, marginRight: 10 }}>
+                <Ionicons name="bulb" size={20} color="white" />
+              </View>
+              <Text style={{ fontSize: 20, fontWeight: "bold", color: theme.primaryText }}>
+                Fun Fact
+              </Text>
+            </View>
+            <View style={{
+              backgroundColor: theme.lightGreen,
+              borderRadius: 16,
+              padding: 16,
+              marginBottom: 20,
+              borderLeftWidth: 4,
+              borderLeftColor: theme.primaryGreen,
+              shadowColor: theme.shadow,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 4,
+              elevation: 3,
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                <Text style={{ fontSize: 24, marginRight: 8 }}>💡</Text>
+                <Text style={{ fontSize: 16, color: theme.primaryText, flex: 1, lineHeight: 22, fontStyle: 'italic' }}>
+                  {food.funFact}
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* Import to Cookbook Modal */}
+        <Modal visible={importModalVisible} transparent animationType="slide">
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <View style={{ backgroundColor: theme.modalBackground, padding: 20, borderRadius: 12, width: '85%', maxHeight: '70%' }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16, textAlign: 'center', color: theme.primaryText }}>
+                Add to Cookbook
+              </Text>
+              
+              <ScrollView style={{ maxHeight: 300 }}>
+                {cookbooks.map((cookbook, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => addToCookbook(index)}
+                    style={{
+                      padding: 12,
+                      borderBottomWidth: 1,
+                      borderBottomColor: theme.borderLight,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Ionicons name="book" size={20} color={theme.primaryGreen} />
+                    <Text style={{ marginLeft: 8, fontSize: 16, flex: 1, color: theme.primaryText }}>
+                      {cookbook.title}
+                    </Text>
+                    <Text style={{ color: theme.secondaryText, fontSize: 12 }}>
+                      {cookbook.recipes.length} recipes
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setImportModalVisible(false);
+                  setCreateCookbookModalVisible(true);
+                }}
+                style={{
+                  backgroundColor: theme.primaryGreen,
+                  padding: 12,
+                  borderRadius: 8,
+                  marginTop: 16,
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                  Create New Cookbook
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => setImportModalVisible(false)}
+                style={{
+                  padding: 12,
+                  marginTop: 8,
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ color: theme.secondaryText }}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Create Cookbook Modal */}
+        <Modal visible={createCookbookModalVisible} transparent animationType="slide">
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <View style={{ backgroundColor: theme.modalBackground, padding: 20, borderRadius: 12, width: '85%' }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16, textAlign: 'center', color: theme.primaryText }}>
                 Create New Cookbook
               </Text>
-            </TouchableOpacity>
+              
+              <TextInput
+                placeholder="Enter cookbook name"
+                value={newCookbookName}
+                onChangeText={setNewCookbookName}
+                style={{
+                  borderWidth: 1,
+                  borderColor: theme.borderLight,
+                  borderRadius: 8,
+                  padding: 12,
+                  marginBottom: 16,
+                  fontSize: 16,
+                  backgroundColor: theme.inputBackground,
+                  color: theme.primaryText,
+                }}
+                placeholderTextColor={theme.inputPlaceholder}
+              />
 
-            <TouchableOpacity
-              onPress={() => setImportModalVisible(false)}
-              style={{
-                padding: 12,
-                marginTop: 8,
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ color: theme.secondaryText }}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+              <TouchableOpacity
+                onPress={createNewCookbook}
+                style={{
+                  backgroundColor: theme.primaryGreen,
+                  padding: 12,
+                  borderRadius: 8,
+                  marginBottom: 8,
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                  Create Cookbook
+                </Text>
+              </TouchableOpacity>
 
-      {/* Create Cookbook Modal */}
-      <Modal visible={createCookbookModalVisible} transparent animationType="slide">
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <View style={{ backgroundColor: theme.modalBackground, padding: 20, borderRadius: 12, width: '85%' }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16, textAlign: 'center', color: theme.primaryText }}>
-              Create New Cookbook
-            </Text>
-            
-            <TextInput
-              placeholder="Enter cookbook name"
-              value={newCookbookName}
-              onChangeText={setNewCookbookName}
-              style={{
-                borderWidth: 1,
-                borderColor: theme.borderLight,
-                borderRadius: 8,
-                padding: 12,
-                marginBottom: 16,
-                fontSize: 16,
-                backgroundColor: theme.inputBackground,
-                color: theme.primaryText,
-              }}
-              placeholderTextColor={theme.inputPlaceholder}
-            />
-
-            <TouchableOpacity
-              onPress={createNewCookbook}
-              style={{
-                backgroundColor: theme.primaryGreen,
-                padding: 12,
-                borderRadius: 8,
-                marginBottom: 8,
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ color: 'white', fontWeight: 'bold' }}>
-                Create Cookbook
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                setCreateCookbookModalVisible(false);
-                setNewCookbookName("");
-              }}
-              style={{
-                padding: 12,
-                alignItems: 'center',
-              }}
-            >
-              <Text style={{ color: theme.secondaryText }}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Add to Meal Plan Modal */}
-      <Modal visible={mealPlanModalVisible} transparent animationType="slide">
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <View style={{ 
-            backgroundColor: theme.modalBackground, 
-            padding: 24, 
-            borderRadius: 20, 
-            width: '90%', 
-            maxHeight: '75%',
-            shadowColor: theme.shadow,
-            shadowOffset: { width: 0, height: 10 },
-            shadowOpacity: 0.3,
-            shadowRadius: 20,
-            elevation: 10,
-          }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
-              <View style={{ 
-                backgroundColor: theme.primaryGreen, 
-                padding: 8, 
-                borderRadius: 20, 
-                marginRight: 12 
-              }}>
-                <Ionicons name="calendar" size={24} color="white" />
-              </View>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.primaryText }}>
-                Add to Meal Plan
-              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setCreateCookbookModalVisible(false);
+                  setNewCookbookName("");
+                }}
+                style={{
+                  padding: 12,
+                  alignItems: 'center',
+                }}
+              >
+                <Text style={{ color: theme.secondaryText }}>Cancel</Text>
+              </TouchableOpacity>
             </View>
-            
-            <Text style={{ 
-              fontSize: 16, 
-              color: theme.secondaryText, 
-              marginBottom: 20, 
-              textAlign: 'center',
-              lineHeight: 22,
-            }}>
-              Select a day to add &quot;{food.name}&quot; to your meal plan
-            </Text>
-            
-            <ScrollView 
-              style={{ maxHeight: 350 }}
-              showsVerticalScrollIndicator={false}
-            >
-              {getDayOptions().map(({ day, recipeCount }) => (
-                <TouchableOpacity
-                  key={day}
-                  onPress={() => addToMealPlan(day)}
-                  style={{
-                    padding: 16,
-                    marginBottom: 8,
-                    borderRadius: 12,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    backgroundColor: recipeCount >= 3 ? theme.tertiaryBackground : theme.cardBackground,
-                    borderWidth: 1,
-                    borderColor: recipeCount >= 3 ? theme.borderLight : theme.border,
-                    shadowColor: theme.shadow,
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: recipeCount >= 3 ? 0 : 0.1,
-                    shadowRadius: 4,
-                    elevation: recipeCount >= 3 ? 0 : 2,
-                  }}
-                  disabled={recipeCount >= 3}
-                >
-                  <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-                    <View style={{ 
-                      backgroundColor: recipeCount >= 3 ? theme.buttonDisabled : theme.primaryGreen, 
-                      padding: 8, 
-                      borderRadius: 12,
-                      marginRight: 12,
-                    }}>
-                      <Ionicons name="calendar" size={16} color="white" />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Text style={{ 
-                        fontSize: 16, 
-                        fontWeight: '600', 
-                        color: recipeCount >= 3 ? theme.buttonDisabled : theme.primaryText,
-                        marginBottom: 2,
-                      }}>
-                        {day}
-                      </Text>
-                      <Text style={{ 
-                        color: recipeCount >= 3 ? theme.buttonDisabled : theme.secondaryText, 
-                        fontSize: 12,
-                      }}>
-                        {recipeCount}/3 recipes
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={{ 
-                    backgroundColor: recipeCount >= 3 ? theme.tertiaryBackground : theme.primaryGreen, 
-                    padding: 6, 
-                    borderRadius: 12,
-                  }}>
-                    {recipeCount >= 3 ? (
-                      <Ionicons name="close-circle" size={16} color={theme.buttonDisabled} />
-                    ) : (
-                      <Ionicons name="add" size={16} color="white" />
-                    )}
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-
-            <TouchableOpacity
-              onPress={() => setMealPlanModalVisible(false)}
-              style={{
-                padding: 16,
-                marginTop: 20,
-                alignItems: 'center',
-                borderTopWidth: 1,
-                borderTopColor: theme.borderLight,
-                paddingTop: 20,
-              }}
-            >
-              <Text style={{ color: theme.secondaryText, fontSize: 16, fontWeight: '500' }}>Cancel</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+
+        {/* Add to Meal Plan Modal */}
+        <Modal visible={mealPlanModalVisible} transparent animationType="slide">
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+            <View style={{ 
+              backgroundColor: theme.modalBackground, 
+              padding: 24, 
+              borderRadius: 20, 
+              width: '90%', 
+              maxHeight: '75%',
+              shadowColor: theme.shadow,
+              shadowOffset: { width: 0, height: 10 },
+              shadowOpacity: 0.3,
+              shadowRadius: 20,
+              elevation: 10,
+            }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 20 }}>
+                <View style={{ 
+                  backgroundColor: theme.primaryGreen, 
+                  padding: 8, 
+                  borderRadius: 20, 
+                  marginRight: 12 
+                }}>
+                  <Ionicons name="calendar" size={24} color="white" />
+                </View>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.primaryText }}>
+                  Add to Meal Plan
+                </Text>
+              </View>
+              
+              <Text style={{ 
+                fontSize: 16, 
+                color: theme.secondaryText, 
+                marginBottom: 20, 
+                textAlign: 'center',
+                lineHeight: 22,
+              }}>
+                Select a day to add &quot;{food.name}&quot; to your meal plan
+              </Text>
+              
+              <ScrollView 
+                style={{ maxHeight: 350 }}
+                showsVerticalScrollIndicator={false}
+              >
+                {getDayOptions().map(({ day, recipeCount }) => (
+                  <TouchableOpacity
+                    key={day}
+                    onPress={() => addToMealPlan(day)}
+                    style={{
+                      padding: 16,
+                      marginBottom: 8,
+                      borderRadius: 12,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      backgroundColor: recipeCount >= 3 ? theme.tertiaryBackground : theme.cardBackground,
+                      borderWidth: 1,
+                      borderColor: recipeCount >= 3 ? theme.borderLight : theme.border,
+                      shadowColor: theme.shadow,
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: recipeCount >= 3 ? 0 : 0.1,
+                      shadowRadius: 4,
+                      elevation: recipeCount >= 3 ? 0 : 2,
+                    }}
+                    disabled={recipeCount >= 3}
+                  >
+                    <View style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                      <View style={{ 
+                        backgroundColor: recipeCount >= 3 ? theme.buttonDisabled : theme.primaryGreen, 
+                        padding: 8, 
+                        borderRadius: 12,
+                        marginRight: 12,
+                      }}>
+                        <Ionicons name="calendar" size={16} color="white" />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ 
+                          fontSize: 16, 
+                          fontWeight: '600', 
+                          color: recipeCount >= 3 ? theme.buttonDisabled : theme.primaryText,
+                          marginBottom: 2,
+                        }}>
+                          {day}
+                        </Text>
+                        <Text style={{ 
+                          color: recipeCount >= 3 ? theme.buttonDisabled : theme.secondaryText, 
+                          fontSize: 12,
+                        }}>
+                          {recipeCount}/3 recipes
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={{ 
+                      backgroundColor: recipeCount >= 3 ? theme.tertiaryBackground : theme.primaryGreen, 
+                      padding: 6, 
+                      borderRadius: 12,
+                    }}>
+                      {recipeCount >= 3 ? (
+                        <Ionicons name="close-circle" size={16} color={theme.buttonDisabled} />
+                      ) : (
+                        <Ionicons name="add" size={16} color="white" />
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              <TouchableOpacity
+                onPress={() => setMealPlanModalVisible(false)}
+                style={{
+                  padding: 16,
+                  marginTop: 20,
+                  alignItems: 'center',
+                  borderTopWidth: 1,
+                  borderTopColor: theme.borderLight,
+                  paddingTop: 20,
+                }}
+              >
+                <Text style={{ color: theme.secondaryText, fontSize: 16, fontWeight: '500' }}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </ScrollView>
     </View>
   );
 };
