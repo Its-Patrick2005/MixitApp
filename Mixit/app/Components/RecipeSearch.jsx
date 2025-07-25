@@ -54,15 +54,14 @@ const RecipeSearch = () => {
   };
 
   const handleRecipePress = (recipe) => {
-    console.log('Selected recipe:', recipe.name);
     navigation.navigate("MealCard", { 
       food: {
         id: recipe.id,
         name: recipe.name,
         image: recipe.image,
         rating: recipe.rating,
-        ingredients: recipe.ingredients,
-        method: recipe.method,
+        ingredients: typeof recipe.ingredients === 'function' ? recipe.ingredients(1) : recipe.ingredients,
+        method: typeof recipe.method === 'function' ? recipe.method(1) : recipe.method,
         funFact: recipe.funFact
       }
     });

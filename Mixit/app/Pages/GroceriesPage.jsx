@@ -307,43 +307,49 @@ const GroceriesPage = () => {
   if (recipeMode && selectedRecipe) {
     return (
       <View style={{ flex: 1, backgroundColor: theme.primaryBackground }}>
-        <Navbar />
-        
-        {/* Map Modal - rendered at top level for immediate access */}
-        <GroceryMap 
-          visible={mapVisible}
-          onClose={() => setMapVisible(false)}
-          recipeName={selectedRecipe?.name}
-        />
-        
-        <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-          {/* Back/Clear button */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin: 16 }}>
-            <TouchableOpacity onPress={leaveRecipeMode} style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="arrow-back" size={24} color={theme.primaryGreen} />
-              <Text style={{ color: theme.primaryGreen, fontWeight: 'bold', fontSize: 16, marginLeft: 6 }}>Back to List</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => setMapVisible(true)}
-              style={{
-                backgroundColor: theme.primaryGreen,
-                paddingHorizontal: 12,
-                paddingVertical: 8,
-                borderRadius: 20,
-                flexDirection: 'row',
-                alignItems: 'center',
-                shadowColor: theme.shadow,
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.2,
-                shadowRadius: 4,
-                elevation: 4,
-              }}
-            >
-              <Ionicons name="location" size={18} color="white" />
-              <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 6 }}>Map</Text>
-            </TouchableOpacity>
-          </View>
-
+        {/* Removed Navbar */}
+        {/* Fixed Back/Clear button at the very top */}
+        <View style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 100,
+          backgroundColor: theme.primaryBackground,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingTop: 48, // Safe area/status bar height
+          paddingHorizontal: 16,
+          height: 72 + 48,
+          borderBottomWidth: 1,
+          borderBottomColor: theme.borderLight,
+        }}>
+          <TouchableOpacity onPress={leaveRecipeMode} style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="arrow-back" size={24} color={theme.primaryGreen} />
+            <Text style={{ color: theme.primaryGreen, fontWeight: 'bold', fontSize: 16, marginLeft: 6 }}>Back to List</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setMapVisible(true)}
+            style={{
+              backgroundColor: theme.primaryGreen,
+              paddingHorizontal: 12,
+              paddingVertical: 8,
+              borderRadius: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              shadowColor: theme.shadow,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 4,
+              elevation: 4,
+            }}
+          >
+            <Ionicons name="location" size={18} color="white" />
+            <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 6 }}>Map</Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView contentContainerStyle={{ paddingTop: 120, paddingBottom: 100 }}>
           {/* Recipe Card (using MealCard design) */}
           <View
             style={{
@@ -501,32 +507,29 @@ const GroceriesPage = () => {
     <View style={{ flex: 1, backgroundColor: theme.primaryBackground }}>
       <Navbar />
       
-      {/* Header */}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, marginTop: 8 }}>
+      {/* Header with Add Item button */}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, marginTop: 8, marginBottom: 12 }}>
         <Text style={{ fontSize: 24, fontWeight: 'bold', color: theme.primaryText }}>My Grocery List</Text>
+        <TouchableOpacity
+          onPress={handleAddGrocery}
+          style={{ 
+            backgroundColor: theme.primaryGreen, 
+            paddingHorizontal: 12, 
+            paddingVertical: 6, 
+            borderRadius: 16,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          <Ionicons name="add" size={16} color="white" />
+          <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 4 }}>Add Item</Text>
+        </TouchableOpacity>
       </View>
 
       <ScrollView
         style={{ paddingHorizontal: 16, marginTop: 16 }}
         contentContainerStyle={{ paddingBottom: 150 }}
       >
-        {/* Add Item button - always visible */}
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 12 }}>
-          <TouchableOpacity
-            onPress={handleAddGrocery}
-            style={{ 
-              backgroundColor: theme.primaryGreen, 
-              paddingHorizontal: 12, 
-              paddingVertical: 6, 
-              borderRadius: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
-            <Ionicons name="add" size={16} color="white" />
-            <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', marginLeft: 4 }}>Add Item</Text>
-          </TouchableOpacity>
-        </View>
         {/* Market List Cards (if recipes are saved) */}
         {savedRecipes.length > 0 && (
           <View style={{ marginBottom: 24 }}>

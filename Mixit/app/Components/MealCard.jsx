@@ -17,6 +17,7 @@ import { Image as ExpoImage } from 'expo-image';
 import ingredientsData from '../Ingredients';
 import { useTheme } from '../theme.jsx';
 import FoodData from '../FoodData';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const MealCard = ({ route, navigation }) => {
   const { food } = route.params;
@@ -293,15 +294,32 @@ const MealCard = ({ route, navigation }) => {
   );
 
   return (
-    <ScrollView
-      style={{ backgroundColor: theme.primaryBackground, flex: 1, paddingTop: '10%', paddingHorizontal: 12 }}
-      contentContainerStyle={{ paddingBottom: 40 }}
-    >
-      {/* Back Button */}
-       <TouchableOpacity onPress={() => navigation.goBack()} style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
-          <AntDesign name="left" size={24} color={theme.primaryGreen} />
-          <Text style={{ fontSize: 18, color: theme.primaryGreen }}>Back</Text>
+    <View style={{ flex: 1, backgroundColor: theme.primaryBackground }}>
+      {/* Fixed Back Button/Header */}
+      <View style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        backgroundColor: theme.primaryBackground,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingTop: 48,
+        paddingHorizontal: 20,
+        height: 72,
+        borderBottomWidth: 1,
+        borderBottomColor: theme.borderLight,
+      }}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Ionicons name="arrow-back" size={24} color={theme.primaryGreen} />
+          <Text style={{ color: theme.primaryGreen, fontWeight: 'bold', fontSize: 18, marginLeft: 6 }}>Back</Text>
         </TouchableOpacity>
+        <Text style={{ flex: 1, textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: theme.primaryText }}>Details</Text>
+        <View style={{ width: 48 }} />
+      </View>
+      {/* Main Scrollable Content */}
+      <ScrollView style={{ paddingTop: 72 }} contentContainerStyle={{ paddingBottom: 40 }}>
 
       {/* Food Image */}
       <View
@@ -570,6 +588,8 @@ const MealCard = ({ route, navigation }) => {
           {Array.isArray(scaledIngredients) ? (
             scaledIngredients.map((item, index) => {
               const match = findBestIngredientMatch(item);
+              // Only show emoji and match if the match name is a substring of the item (case-insensitive)
+              const isTrueMatch = match && item.toLowerCase().includes((match.name || '').toLowerCase());
               return (
                 <View key={index} style={{ 
                   flexDirection: 'row', 
@@ -577,17 +597,20 @@ const MealCard = ({ route, navigation }) => {
                   marginBottom: 8,
                   paddingVertical: 4,
                 }}>
-                  {match ? (
-                    <Text style={{ fontSize: 18, marginRight: 8 }}>{match.emoji}</Text>
+                  {isTrueMatch ? (
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      {match.icon && match.iconSet === 'MaterialCommunityIcons' ? (
+                        <MaterialCommunityIcons name={match.icon} size={18} color={theme.primaryGreen} style={{ marginRight: 8 }} />
+                      ) : (
+                        <Text style={{ fontSize: 18, marginRight: 8 }}>{match.emoji}</Text>
+                      )}
+                      <Text style={{ fontSize: 16, color: theme.primaryText, flex: 1 }}>
+                        {item}
+                      </Text>
+                    </View>
                   ) : (
-                    <View style={{ backgroundColor: theme.primaryGreen, width: 6, height: 6, borderRadius: 3, marginRight: 12 }} />
+                    <Text style={{ fontSize: 16, color: theme.primaryText, flex: 1 }}>{item}</Text>
                   )}
-                  <Text style={{ fontSize: 16, color: theme.primaryText, flex: 1 }}>
-                    {match ? match.name : item}
-                    {match && (match.name || '').toLowerCase() !== (item || '').trim().toLowerCase() && (
-                      <Text style={{ color: theme.tertiaryText, fontStyle: 'italic', marginLeft: 6 }}> (Did you mean?)</Text>
-                    )}
-                  </Text>
                 </View>
               );
             })
@@ -685,7 +708,8 @@ const MealCard = ({ route, navigation }) => {
           </View>
         </View>
       )}
-
+      </ScrollView>
+      {/* Modals and overlays go here, outside the ScrollView */}
       {/* Import to Cookbook Modal */}
       <Modal visible={importModalVisible} transparent animationType="slide">
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
@@ -928,7 +952,7 @@ const MealCard = ({ route, navigation }) => {
           </View>
         </View>
       </Modal>
-    </ScrollView>
+    </View>
   );
 };
 

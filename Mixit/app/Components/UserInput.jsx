@@ -232,27 +232,31 @@ const UserInput = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.primaryBackground }}>
-      {/* Header */}
-      <View style={{ 
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        paddingTop: 48, 
-        paddingHorizontal: 20, 
-        backgroundColor: theme.secondaryGreen 
+      {/* Fixed Header */}
+      <View style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        backgroundColor: theme.secondaryGreen,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingTop: 48,
+        paddingHorizontal: 20,
+        height: 72,
+        borderBottomWidth: 1,
+        borderBottomColor: theme.borderLight,
       }}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={{ color: theme.primaryText, fontWeight: 'bold', fontSize: 20 }}>Cancel</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={handleSave}>
-          <Text style={{ 
-            color: isDarkMode ? 'white' : theme.primaryGreen, 
-            fontWeight: 'bold', 
-            fontSize: 20 
-          }}>Save</Text>
+          <Text style={{ color: isDarkMode ? 'white' : theme.primaryGreen, fontWeight: 'bold', fontSize: 20 }}>Save</Text>
         </TouchableOpacity>
       </View>
-      <KeyboardAwareScrollView contentContainerStyle={{ padding: 20 }} keyboardShouldPersistTaps="handled" extraScrollHeight={40} enableOnAndroid={true}>
+      <KeyboardAwareScrollView contentContainerStyle={{ paddingTop: 72, padding: 20 }} keyboardShouldPersistTaps="handled" extraScrollHeight={40} enableOnAndroid={true}>
         {/* Card Section */}
         <View style={{ 
           backgroundColor: theme.cardBackground, 

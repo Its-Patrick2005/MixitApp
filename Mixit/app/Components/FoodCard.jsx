@@ -147,8 +147,8 @@ const FoodCard2Component = () => {
         name: food.name,
         image: food.image,
         rating: food.rating,
-        ingredients: food.ingredients,
-        method: food.method,
+        ingredients: typeof food.ingredients === 'function' ? food.ingredients(1) : food.ingredients,
+        method: typeof food.method === 'function' ? food.method(1) : food.method,
         funFact: food.funFact
       }
     });
@@ -306,8 +306,8 @@ export const Detailedfoodlist = React.memo(() => {
         name: food.name,
         image: food.image,
         rating: food.rating,
-        ingredients: food.ingredients,
-        method: food.method,
+        ingredients: typeof food.ingredients === 'function' ? food.ingredients(1) : food.ingredients,
+        method: typeof food.method === 'function' ? food.method(1) : food.method,
         funFact: food.funFact
       }
     });

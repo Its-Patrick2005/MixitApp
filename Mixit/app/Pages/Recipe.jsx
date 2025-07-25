@@ -333,8 +333,8 @@ export const Recipe3 = () => {
                     name: fullRecipe.name,
                     image: fullRecipe.image,
                     rating: fullRecipe.rating || 4.0,
-                    ingredients: fullRecipe.ingredients || [],
-                    method: fullRecipe.method || [],
+                    ingredients: typeof fullRecipe.ingredients === 'function' ? fullRecipe.ingredients(1) : fullRecipe.ingredients,
+                    method: typeof fullRecipe.method === 'function' ? fullRecipe.method(1) : fullRecipe.method,
                     funFact: fullRecipe.funFact || ""
                   }
                 });

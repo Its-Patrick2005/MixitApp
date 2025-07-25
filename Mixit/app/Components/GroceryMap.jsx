@@ -322,7 +322,7 @@ const GroceryMap = ({ visible, onClose, recipeName }) => {
     >
       <View style={[styles.container, { backgroundColor: theme.primaryBackground }]}>
         {/* Header */}
-        <View style={[styles.header, { backgroundColor: theme.secondaryBackground, borderBottomColor: theme.borderLight }]}>
+        <View style={[styles.header, { backgroundColor: theme.secondaryBackground, borderBottomColor: theme.borderLight, position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100 }]}>
           <TouchableOpacity onPress={onClose} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color={theme.primaryGreen} />
             <Text style={[styles.backText, { color: theme.primaryGreen }]}>Back</Text>
@@ -346,7 +346,7 @@ const GroceryMap = ({ visible, onClose, recipeName }) => {
             {/* Map */}
             <MapView
               ref={mapRef}
-              style={styles.map}
+              style={[styles.map, { marginTop: 80 }]} // Add margin to account for fixed header
               initialRegion={currentRegion}
               region={currentRegion}
               showsUserLocation={true}

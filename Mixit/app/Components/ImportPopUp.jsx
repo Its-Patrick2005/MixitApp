@@ -58,8 +58,8 @@ const ImportPopUp = ({ visible, onClose, onWriteFromScratch }) => {
           name: found.name,
           image: found.image,
           rating: found.rating,
-          ingredients: found.ingredients,
-          method: found.method,
+          ingredients: typeof found.ingredients === 'function' ? found.ingredients(1) : found.ingredients,
+          method: typeof found.method === 'function' ? found.method(1) : found.method,
           funFact: found.funFact
         }
       });
@@ -74,7 +74,17 @@ const ImportPopUp = ({ visible, onClose, onWriteFromScratch }) => {
     setScannerVisible(false);
     setCapturedImageUri(null);
     // Navigate to MealCard
-    navigation.navigate("MealCard", { food: detectedFood });
+    navigation.navigate("MealCard", { 
+      food: {
+        id: detectedFood.id,
+        name: detectedFood.name,
+        image: detectedFood.image,
+        rating: detectedFood.rating,
+        ingredients: typeof detectedFood.ingredients === 'function' ? detectedFood.ingredients(1) : detectedFood.ingredients,
+        method: typeof detectedFood.method === 'function' ? detectedFood.method(1) : detectedFood.method,
+        funFact: detectedFood.funFact
+      }
+    });
   };
 
   // Handle camera press - directly open camera
