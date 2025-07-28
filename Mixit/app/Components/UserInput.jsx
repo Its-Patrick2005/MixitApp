@@ -14,7 +14,7 @@ const UserInput = () => {
   const [image, setImage] = useState(null);
   const [ingredients, setIngredients] = useState(['']);
   const [methods, setMethods] = useState(['']);
-  const [notes, setNotes] = useState('');
+  const [funFact, setFunFact] = useState('');
   const [cookbookPopupVisible, setCookbookPopupVisible] = useState(false);
   const [selectedCookbook, setSelectedCookbook] = useState(null);
   const [cookbooks, setCookbooks] = useState([]);
@@ -190,7 +190,7 @@ const UserInput = () => {
       image,
       ingredients: getCleanIngredients(),
       method: getCleanMethods(),
-      notes,
+      funFact,
     };
     // Find and update the selected cookbook
     const updatedCookbooks = cookbooks.map((cb) => {
@@ -373,10 +373,10 @@ const UserInput = () => {
             onSubmitEditing={() => handleMethodSubmit(idx)}
           />
         ))}
-        {/* Notes Section */}
-        <Text style={{ color: theme.primaryText, fontWeight: 'bold', fontSize: 15, marginBottom: 8 }}>NOTES</Text>
+        {/* Fun Fact Section */}
+        <Text style={{ color: theme.primaryText, fontWeight: 'bold', fontSize: 15, marginBottom: 8 }}>FUN FACT</Text>
         <TextInput
-          placeholder="Add your recipe notes"
+          placeholder="Add a fun fact about your recipe"
           placeholderTextColor={theme.inputPlaceholder}
           style={{ 
             backgroundColor: theme.cardBackground, 
@@ -388,8 +388,8 @@ const UserInput = () => {
             borderWidth: 1, 
             borderColor: theme.border 
           }}
-          value={notes}
-          onChangeText={setNotes}
+          value={funFact}
+          onChangeText={setFunFact}
           multiline
         />
       </KeyboardAwareScrollView>

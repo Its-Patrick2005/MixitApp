@@ -335,7 +335,7 @@ export const Recipe3 = () => {
                     rating: fullRecipe.rating || 4.0,
                     ingredients: typeof fullRecipe.ingredients === 'function' ? fullRecipe.ingredients(1) : fullRecipe.ingredients,
                     method: typeof fullRecipe.method === 'function' ? fullRecipe.method(1) : fullRecipe.method,
-                    funFact: fullRecipe.funFact || ""
+                    funFact: fullRecipe.funFact || recipe.funFact || ""
                   }
                 });
               }}
