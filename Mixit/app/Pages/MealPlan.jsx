@@ -12,6 +12,8 @@ const MealPlan = () => {
   const [addRecipeModalVisible, setAddRecipeModalVisible] = useState(false);
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedMeal, setSelectedMeal] = useState(null);
+  const [threeDotsModalVisible, setThreeDotsModalVisible] = useState(false);
+  const [selectedDayForManagement, setSelectedDayForManagement] = useState(null);
   const { theme } = useTheme();
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -113,24 +115,43 @@ const MealPlan = () => {
       {/* Header */}
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, marginTop: 8 }}>
         <Text style={{ fontSize: 24, fontWeight: 'bold', color: theme.primaryText }}>Meal Plan</Text>
-        <TouchableOpacity
-          onPress={() => {
-            setSelectedDay(null);
-            setSelectedMeal(null);
-            setAddRecipeModalVisible(true);
-          }}
-          style={{
-            backgroundColor: theme.primaryGreen,
-            paddingHorizontal: 16,
-            paddingVertical: 8,
-            borderRadius: 20,
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}
-        >
-          <Ionicons name="add" size={16} color="white" />
-          <Text style={{ color: 'white', marginLeft: 4, fontWeight: '600' }}>Add Recipe</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedDay(null);
+              setSelectedMeal(null);
+              setAddRecipeModalVisible(true);
+            }}
+            style={{
+              backgroundColor: theme.primaryGreen,
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              borderRadius: 20,
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginRight: 8,
+            }}
+          >
+            <Ionicons name="add" size={16} color="white" />
+            <Text style={{ color: 'white', marginLeft: 4, fontWeight: '600' }}>Add Recipe</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              console.log('Three dots button pressed');
+              console.log('Current threeDotsModalVisible:', threeDotsModalVisible);
+              Alert.alert('Test', 'Three dots button pressed!');
+              setThreeDotsModalVisible(true);
+              console.log('Setting threeDotsModalVisible to true');
+            }}
+            style={{
+              backgroundColor: theme.tertiaryBackground,
+              padding: 8,
+              borderRadius: 20,
+            }}
+          >
+            <Ionicons name="ellipsis-vertical" size={20} color={theme.primaryText} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <ScrollView
@@ -258,6 +279,164 @@ const MealPlan = () => {
           </View>
         ))}
       </ScrollView>
+
+      {/* Three Dots Modal - Day Selection and Recipe Management */}
+      <Modal
+        visible={threeDotsModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setThreeDotsModalVisible(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{
+            backgroundColor: theme.modalBackground,
+            borderRadius: 20,
+            padding: 24,
+            width: '90%',
+            maxHeight: '80%',
+            shadowColor: theme.shadow,
+            shadowOpacity: 0.2,
+            shadowRadius: 10,
+            elevation: 10,
+          }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.primaryText }}>
+                Manage Meal Plan
+              </Text>
+              <TouchableOpacity onPress={() => {
+                setThreeDotsModalVisible(false);
+                setSelectedDayForManagement(null);
+              }}>
+                <Ionicons name="close" size={24} color={theme.primaryText} />
+              </TouchableOpacity>
+            </View>
+
+            {!selectedDayForManagement ? (
+              // Day Selection
+              <View>
+                <Text style={{ fontSize: 16, fontWeight: '600', color: theme.primaryText, marginBottom: 16 }}>
+                  Select a day to manage recipes:
+                </Text>
+                <ScrollView style={{ maxHeight: 400 }}>
+                  {days.map((day) => {
+                    const recipeCount = getRecipeCountForDay(day);
+                    return (
+                      <TouchableOpacity
+                        key={day}
+                        onPress={() => setSelectedDayForManagement(day)}
+                        style={{
+                          backgroundColor: theme.tertiaryBackground,
+                          padding: 16,
+                          marginBottom: 12,
+                          borderRadius: 12,
+                          borderWidth: 1,
+                          borderColor: theme.border,
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <View>
+                          <Text style={{ fontSize: 16, fontWeight: '600', color: theme.primaryText }}>
+                            {day}
+                          </Text>
+                          <Text style={{ fontSize: 12, color: theme.secondaryText, marginTop: 4 }}>
+                            {recipeCount} recipe{recipeCount !== 1 ? 's' : ''} planned
+                          </Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={20} color={theme.primaryText} />
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+            ) : (
+              // Recipe Management for Selected Day
+              <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                  <TouchableOpacity
+                    onPress={() => setSelectedDayForManagement(null)}
+                    style={{ marginRight: 12 }}
+                  >
+                    <Ionicons name="arrow-back" size={24} color={theme.primaryText} />
+                  </TouchableOpacity>
+                  <Text style={{ fontSize: 18, fontWeight: 'bold', color: theme.primaryText }}>
+                    {selectedDayForManagement}
+                  </Text>
+                </View>
+
+                <ScrollView style={{ flex: 1 }}>
+                  {meals.map((meal) => {
+                    const recipes = mealPlanData[selectedDayForManagement]?.[meal] || [];
+                    return (
+                      <View key={meal} style={{ marginBottom: 20 }}>
+                        <Text style={{ fontSize: 16, fontWeight: '600', color: theme.primaryText, marginBottom: 12 }}>
+                          {meal} ({recipes.length} recipe{recipes.length !== 1 ? 's' : ''})
+                        </Text>
+                        
+                        {recipes.length > 0 ? (
+                          recipes.map((recipe, index) => (
+                            <View
+                              key={`${recipe.name}-${index}`}
+                              style={{
+                                backgroundColor: theme.cardBackground,
+                                borderRadius: 12,
+                                padding: 12,
+                                marginBottom: 8,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                borderWidth: 1,
+                                borderColor: theme.border,
+                              }}
+                            >
+                              <Image
+                                source={{ uri: recipe.image }}
+                                style={{ width: 50, height: 50, borderRadius: 8, marginRight: 12 }}
+                              />
+                              <View style={{ flex: 1 }}>
+                                <Text style={{ fontSize: 14, fontWeight: '600', color: theme.primaryText, marginBottom: 2 }}>
+                                  {recipe.name}
+                                </Text>
+                                <Text style={{ fontSize: 12, color: theme.secondaryText }}>
+                                  ⭐ {recipe.rating}
+                                </Text>
+                              </View>
+                              <TouchableOpacity
+                                onPress={() => removeRecipeFromMealPlan(selectedDayForManagement, meal, index)}
+                                style={{
+                                  backgroundColor: theme.error,
+                                  padding: 8,
+                                  borderRadius: 12,
+                                }}
+                              >
+                                <Ionicons name="trash" size={16} color="white" />
+                              </TouchableOpacity>
+                            </View>
+                          ))
+                        ) : (
+                          <View style={{
+                            backgroundColor: theme.tertiaryBackground,
+                            borderRadius: 12,
+                            padding: 16,
+                            alignItems: 'center',
+                            borderWidth: 1,
+                            borderColor: theme.borderLight,
+                            borderStyle: 'dashed',
+                          }}>
+                            <Text style={{ color: theme.tertiaryText, textAlign: 'center' }}>
+                              No recipes planned for {meal.toLowerCase()}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+            )}
+          </View>
+        </View>
+      </Modal>
 
       {/* Add Recipe Modal */}
       <Modal

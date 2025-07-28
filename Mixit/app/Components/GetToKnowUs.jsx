@@ -33,47 +33,16 @@ const GetToKnowUs = ({ name, icon, selectedOptions, setSelectedOptions }) => {
         borderColor: isSelected ? theme.primaryGreen : theme.border,
         borderRadius: 12,
         padding: 20,
-        flexDirection: "row",
-        alignItems: "center",
-        shadowColor: theme.shadow,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: isSelected ? 0.2 : 0.1,
-        shadowRadius: 4,
-        elevation: isSelected ? 4 : 2,
         minHeight: 60,
         width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
       }}
     >
-      {icon && <View style={{ marginRight: 16, minWidth: 24 }}>{icon}</View>}
-      <Text
-        style={{
-          fontSize: 16,
-          fontWeight: isSelected ? "600" : "400",
-          color: isSelected ? theme.primaryGreen : theme.primaryText,
-          flex: 1,
-          textAlign: 'left',
-        }}
-      >
-        {name}
-      </Text>
-      <View
-        style={{
-          width: 20,
-          height: 20,
-          borderRadius: 10,
-          borderWidth: 2,
-          borderColor: isSelected ? theme.primaryGreen : theme.borderLight,
-          backgroundColor: isSelected ? theme.primaryGreen : 'transparent',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginLeft: 12,
-        }}
-      >
-        {isSelected && (
-          <Text style={{ color: theme.inverseText, fontSize: 12, fontWeight: 'bold' }}>
-            ✓
-          </Text>
-        )}
+      {icon && <View style={{ marginRight: 16 }}>{icon}</View>}
+      <Text style={{ color: theme.primaryText }}>{name}</Text>
+      <View style={{ marginLeft: 16 }}>
+        {isSelected && <Text>✓</Text>}
       </View>
     </TouchableOpacity>
   );
