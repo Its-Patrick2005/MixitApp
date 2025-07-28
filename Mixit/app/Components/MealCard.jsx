@@ -18,6 +18,7 @@ import ingredientsData from '../Ingredients';
 import { useTheme } from '../theme.jsx';
 import FoodData from '../FoodData';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { userStorage } from '../utils/userStorage';
 
 const MealCard = ({ route, navigation }) => {
   const { food } = route.params;
@@ -42,7 +43,7 @@ const MealCard = ({ route, navigation }) => {
 
   const loadCookbooks = async () => {
     try {
-      const savedCookbooks = await AsyncStorage.getItem('cookbooks');
+      const savedCookbooks = await userStorage.getItem('cookbooks');
       if (savedCookbooks) {
         setCookbooks(JSON.parse(savedCookbooks));
       }
@@ -53,7 +54,7 @@ const MealCard = ({ route, navigation }) => {
 
   const loadMealPlanData = async () => {
     try {
-      const savedMealPlan = await AsyncStorage.getItem('mealPlanData');
+      const savedMealPlan = await userStorage.getItem('mealPlanData');
       if (savedMealPlan) {
         setMealPlanData(JSON.parse(savedMealPlan));
       }
@@ -64,7 +65,7 @@ const MealCard = ({ route, navigation }) => {
 
   const saveMealPlanData = async (updatedMealPlan) => {
     try {
-      await AsyncStorage.setItem('mealPlanData', JSON.stringify(updatedMealPlan));
+      await userStorage.setItem('mealPlanData', JSON.stringify(updatedMealPlan));
     } catch (error) {
       console.log('Error saving meal plan data:', error);
     }
@@ -138,7 +139,7 @@ const MealCard = ({ route, navigation }) => {
 
   const saveCookbooks = async (updatedCookbooks) => {
     try {
-      await AsyncStorage.setItem('cookbooks', JSON.stringify(updatedCookbooks));
+      await userStorage.setItem('cookbooks', JSON.stringify(updatedCookbooks));
     } catch (error) {
       console.log('Error saving cookbooks:', error);
     }
@@ -478,7 +479,7 @@ const MealCard = ({ route, navigation }) => {
               onPress={async () => {
                 try {
                   // Get current grocery items
-                  const stored = await AsyncStorage.getItem('groceryItems');
+                  const stored = await userStorage.getItem('groceryItems');
                   let groceryItems = [];
                   if (stored) {
                     groceryItems = JSON.parse(stored);
@@ -491,10 +492,10 @@ const MealCard = ({ route, navigation }) => {
                       updatedGroceryItems.push(ingredient);
                     }
                   });
-                  await AsyncStorage.setItem('groceryItems', JSON.stringify(updatedGroceryItems));
+                  await userStorage.setItem('groceryItems', JSON.stringify(updatedGroceryItems));
 
                   // Also add a market list card (recipe) to savedMarketRecipes
-                  const savedRecipesRaw = await AsyncStorage.getItem('savedMarketRecipes');
+                  const savedRecipesRaw = await userStorage.getItem('savedMarketRecipes');
                   let savedRecipes = [];
                   if (savedRecipesRaw) {
                     savedRecipes = JSON.parse(savedRecipesRaw);
@@ -511,7 +512,7 @@ const MealCard = ({ route, navigation }) => {
                       unchecked: Array.isArray(scaledIngredients) ? [...scaledIngredients] : [],
                       lastUpdated: new Date().toISOString()
                     });
-                    await AsyncStorage.setItem('savedMarketRecipes', JSON.stringify(savedRecipes));
+                    await userStorage.setItem('savedMarketRecipes', JSON.stringify(savedRecipes));
                   }
 
                   Alert.alert('Added to Grocery List', 'All ingredients and a market list card have been added!');

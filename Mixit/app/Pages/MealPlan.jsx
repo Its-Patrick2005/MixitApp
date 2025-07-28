@@ -6,6 +6,7 @@ import ImportTab from '../Components/ImportTab';
 import Navbar from '../Components/Navbar';
 import foodList from '../FoodData';
 import { useTheme } from '../theme.jsx';
+import { userStorage } from '../utils/userStorage';
 
 const MealPlan = () => {
   const [mealPlanData, setMealPlanData] = useState({});
@@ -25,7 +26,7 @@ const MealPlan = () => {
 
   const loadMealPlan = async () => {
     try {
-      const savedMealPlan = await AsyncStorage.getItem('mealPlanData');
+      const savedMealPlan = await userStorage.getItem('mealPlanData');
       if (savedMealPlan) {
         setMealPlanData(JSON.parse(savedMealPlan));
       }
@@ -36,7 +37,7 @@ const MealPlan = () => {
 
   const saveMealPlan = async (newMealPlan) => {
     try {
-      await AsyncStorage.setItem('mealPlanData', JSON.stringify(newMealPlan));
+      await userStorage.setItem('mealPlanData', JSON.stringify(newMealPlan));
       setMealPlanData(newMealPlan);
     } catch (error) {
       console.log('Error saving meal plan:', error);

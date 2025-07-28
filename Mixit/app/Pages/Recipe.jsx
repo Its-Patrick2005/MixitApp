@@ -16,6 +16,7 @@ import {
 import { FoodCard3 } from "../Components/FoodCard";
 import foodList from "../FoodData";
 import { useTheme } from '../theme.jsx';
+import { userStorage } from '../utils/userStorage';
 
 // ============ Recipe Screen ============
 const Recipe = ({ cookbooks = [], setCookbooks = () => {} }) => {
@@ -42,7 +43,7 @@ const Recipe = ({ cookbooks = [], setCookbooks = () => {} }) => {
 
   const loadCookbooks = async () => {
     try {
-      const savedCookbooks = await AsyncStorage.getItem('cookbooks');
+      const savedCookbooks = await userStorage.getItem('cookbooks');
       if (savedCookbooks) {
         const parsedCookbooks = JSON.parse(savedCookbooks);
         setLocalCookbooks(parsedCookbooks);
@@ -57,7 +58,7 @@ const Recipe = ({ cookbooks = [], setCookbooks = () => {} }) => {
 
   const saveCookbooks = async (updatedCookbooks) => {
     try {
-      await AsyncStorage.setItem('cookbooks', JSON.stringify(updatedCookbooks));
+      await userStorage.setItem('cookbooks', JSON.stringify(updatedCookbooks));
     } catch (error) {
       console.log('Error saving cookbooks:', error);
     }
@@ -266,11 +267,11 @@ export const Recipe3 = () => {
           style: 'destructive',
           onPress: async () => {
             try {
-              const savedCookbooks = await AsyncStorage.getItem('cookbooks');
+              const savedCookbooks = await userStorage.getItem('cookbooks');
               if (savedCookbooks) {
                 const cookbooks = JSON.parse(savedCookbooks);
                 cookbooks[cookbookIndex].recipes = cookbooks[cookbookIndex].recipes.filter((_, i) => i !== idx);
-                await AsyncStorage.setItem('cookbooks', JSON.stringify(cookbooks));
+                await userStorage.setItem('cookbooks', JSON.stringify(cookbooks));
                 navigation.goBack();
               }
             } catch (error) {

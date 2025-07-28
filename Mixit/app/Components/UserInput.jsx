@@ -7,6 +7,7 @@ import { Image, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } fro
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import ingredientsData from '../Ingredients';
 import { useTheme } from '../theme.jsx';
+import { userStorage } from '../utils/userStorage';
 
 const UserInput = () => {
   const navigation = useNavigation();
@@ -27,7 +28,7 @@ const UserInput = () => {
   // Load cookbooks on mount
   React.useEffect(() => {
     (async () => {
-      const saved = await AsyncStorage.getItem('cookbooks');
+      const saved = await userStorage.getItem('cookbooks');
       if (saved) setCookbooks(JSON.parse(saved));
     })();
   }, []);
@@ -200,7 +201,7 @@ const UserInput = () => {
       return cb;
     });
     setCookbooks(updatedCookbooks);
-    await AsyncStorage.setItem('cookbooks', JSON.stringify(updatedCookbooks));
+    await userStorage.setItem('cookbooks', JSON.stringify(updatedCookbooks));
     alert('Recipe saved!');
     navigation.goBack();
   };
@@ -227,7 +228,7 @@ const UserInput = () => {
     setShowCreateCookbook(false);
     setNewCookbookName('');
     setCookbookPopupVisible(false);
-    await AsyncStorage.setItem('cookbooks', JSON.stringify(updatedCookbooks));
+    await userStorage.setItem('cookbooks', JSON.stringify(updatedCookbooks));
   };
 
   return (

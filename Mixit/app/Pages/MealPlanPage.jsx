@@ -7,6 +7,7 @@ import ImportTab from '../Components/ImportTab';
 import Navbar from '../Components/Navbar';
 import foodList from '../FoodData';
 import { useTheme } from '../theme.jsx';
+import { userStorage } from '../utils/userStorage';
 
 const MealPlanPage = ({ navigation }) => {
   const [startDate, setStartDate] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
@@ -52,7 +53,7 @@ const MealPlanPage = ({ navigation }) => {
 
   const loadMealPlanData = async () => {
     try {
-      const savedMealPlan = await AsyncStorage.getItem('mealPlanData');
+      const savedMealPlan = await userStorage.getItem('mealPlanData');
       if (savedMealPlan) {
         setMealPlanData(JSON.parse(savedMealPlan));
       }
@@ -116,7 +117,7 @@ const MealPlanPage = ({ navigation }) => {
       setMealPlanData(updatedMealPlan);
       
       try {
-        await AsyncStorage.setItem('mealPlanData', JSON.stringify(updatedMealPlan));
+        await userStorage.setItem('mealPlanData', JSON.stringify(updatedMealPlan));
       } catch (error) {
         console.log('Error saving meal plan data:', error);
       }

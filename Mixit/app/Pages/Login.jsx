@@ -8,6 +8,7 @@ import Button from "../Components/Button";
 import OTPverification from "../Components/OTPverification";
 import { useTheme } from '../theme.jsx';
 import { register, login as loginApi, verifyOtp, resendOtp, setAuthToken } from '../services/api';
+import { migrateToUserSpecificStorage } from '../utils/userStorage';
 
 const Login = () => {
   const navigation = useNavigation();
@@ -160,6 +161,8 @@ const Login = () => {
                   setName(name);
                   await AsyncStorage.setItem('profileUsername', email);
                   await AsyncStorage.setItem('profileName', name);
+                  // Migrate existing data to user-specific storage
+                  await migrateToUserSpecificStorage();
                   navigation.reset({
                     index: 0,
                     routes: [{ name: 'Login1', params: { email, name } }],
@@ -441,6 +444,8 @@ export const Login2 = () => {
                   await AsyncStorage.setItem('profileUsername', email);
                   const storedName = await AsyncStorage.getItem('profileName');
                   if (storedName) setName(storedName);
+                  // Migrate existing data to user-specific storage
+                  await migrateToUserSpecificStorage();
                   navigation.reset({
                     index: 0,
                     routes: [{ name: 'Home' }],
